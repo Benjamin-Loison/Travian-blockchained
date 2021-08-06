@@ -1,13 +1,17 @@
 #include <QApplication>
-#include <QApplication>
-#include <QPushButton>
+#include <QtWidgets>
+#include "MyWindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QPushButton bouton("Salut les Zéros, la forme ?");
-    bouton.show();//hey
+    QTranslator translator;
+    translator.load("travianblockchained_fr");
+    app.installTranslator(&translator);
+
+    MyWindow window;
+    window.show();
 
     return app.exec();
 }
