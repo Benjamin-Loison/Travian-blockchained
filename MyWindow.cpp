@@ -1,6 +1,7 @@
 #include <QApplication> // why need this if it is also in the header ?!
 #include <QtWidgets>
 #include "MyWindow.h"
+#include "QStringPlus.h"
 
 MyWindow::MyWindow() : QWidget()
 {
@@ -9,43 +10,42 @@ MyWindow::MyWindow() : QWidget()
     setWindowIcon(QIcon("travian.png"));
     setWindowTitle("Travian blockchained");
 
-    // 1 : Créer le QTabWidget
-    QLabel* aparatext = new QLabel(QObject::tr("Great empires begin with important decisions ! Are you an attacker who loves competition ? Or is your time investment rather low ? Are you a team player who enjoys building up a thriving economy to forge the anvil ?"), this);
+    m_paratext = new QLabel(QObject::tr("Great empires begin with important decisions ! Are you an attacker who loves competition ? Or is your time investment rather low ? Are you a team player who enjoys building up a thriving economy to forge the anvil ?"), this);
 
-    QTabWidget *onglets = new QTabWidget(this);
-    onglets->setGeometry(30, 20, 240, 160);
+    m_tabs = new QTabWidget(this);
+    m_tabs->setGeometry(30, 20, 240, 160);
 
-    // 2 : Créer les pages, en utilisant un widget parent pour contenir chacune des pages
-    QWidget *page1 = new QWidget;
-    QLabel *page3 = new QLabel; // Comme un QLabel est aussi un QWidget (il en hérite), on peut aussi s'en servir de page
+    addTribe("gauls", "phalanx", "Low time requirements", "Loot protection and good defense", "Excellent, fast cavalry", "Well suited to new players");
+    addTribe("romans", "legionnaire", "Moderate time requirements", "Can develop villages the fastest", "Very strong but expensive troops", "Hard to play for new players");
+    addTribe("teutons", "clubswinger", "High time requirements", "Good at looting in early game", "Strong, cheap infantry", "For aggressive players");
+}
 
-    // 3 : Créer le contenu des pages de widgets
+void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended)
+{
+    QLabel* tab = new QLabel; // isn't there any other way to do this ? (QWidget doesn't work here)
+    QVBoxLayout* vbox = new QVBoxLayout;
 
-        // Page 1
+    addTribeText(tab, troopName, timeRequirement);
+    addTribeText(tab, troopName, speciality);
+    addTribeText(tab, troopName, troopsTraining);
+    addTribeText(tab, troopName, designedForUsers);
 
-        QLineEdit *lineEdit = new QLineEdit("Entrez votre nom");
-        QPushButton *bouton1 = new QPushButton("Cliquez ici");
+    m_tabs->addTab(tab, QIcon(tribeName + ".png"), tr("%1").arg(firstUppercase(tribeName)));
+}
 
-        QVBoxLayout *vbox1 = new QVBoxLayout;
-        vbox1->addWidget(lineEdit);
-        vbox1->addWidget(bouton1);
+void MyWindow::addTribeText(QLabel* tab, QString troopName, QString text)
+{
+    QHBoxLayout* hbox = new QHBoxLayout;
+    QLabel* qText = new QLabel(tr("%1").arg(text));
+    //qText->setPixmap(QPixmap(troopName + ".png"));
+    QLabel* qIcon = new QLabel();
+    qIcon->setPixmap(QPixmap(troopName + ".png"));
+    hbox->addWidget(qIcon);
+    hbox->addWidget(qText);
+    //tab->setPixmap(QPixmap(troopName + ".png"));
+    //QPixMap(troopName + ".png", vbox);
+    //vbox->addWidget(new QIcon(troopName + ".png"));
+    tab->setLayout(hbox);
 
-        page1->setLayout(vbox1);
-
-        // Page 2
-
-        QProgressBar *progress = new QProgressBar;
-        progress->setValue(50);
-        QSlider *slider = new QSlider(Qt::Horizontal);
-        QPushButton *bouton3 = new QPushButton("Valider");
-
-        // Page 3 (je ne vais afficher qu'une image ici, pas besoin de layout)
-
-        page3->setPixmap(QPixmap("phalanx.png"));
-        page3->setAlignment(Qt::AlignCenter);
-
-    // 4 : ajouter les onglets au QTabWidget, en indiquant la page qu'ils contiennent
-
-    onglets->addTab(page1, QIcon("gauls.png"), QObject::tr("Gauls"));
-    onglets->addTab(page3, QIcon("teutons.png"), QObject::tr("Teutons"));
+    //tab->setAlignment(Qt::AlignLeft);
 }
