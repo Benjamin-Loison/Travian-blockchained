@@ -4,5 +4,6 @@
 #include <QString>
 
 QString firstUppercase(QString s);
+const char* cStr(const QString s);
 
 #endif

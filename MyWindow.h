@@ -18,7 +18,6 @@ class MyWindow : public QWidget
     private:
         void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
              addTribeText(QVBoxLayout* vbox, QString troopName, QString text);
-        QLabel* m_paratext;
         QTabWidget* m_tabs;
 };
 

@@ -11,23 +11,30 @@ MyWindow::MyWindow() : QWidget()
     setWindowTitle("Travian blockchained");
 
     QVBoxLayout* vbox = new QVBoxLayout;
-    m_paratext = new QLabel(QObject::tr("Great empires begin with important decisions ! Are you an attacker who loves competition ? Or is your time investment rather low ? Are you a team player who enjoys building up a thriving economy to forge the anvil ?"), this);
+    QLabel* m_paratext = new QLabel(QObject::tr("Great empires begin with important decisions ! Are you an attacker who loves competition ? Or is your time investment rather low ? Are you a team player who enjoys building up a thriving economy to forge the anvil ?"), this);
     m_paratext->setWordWrap(true);
 
     m_tabs = new QTabWidget();
     m_tabs->setGeometry(30, 20, 240, 160);
+
+    QPushButton* confirmButton = new QPushButton(tr("Confirm"));
+
     vbox->addWidget(m_paratext);
     vbox->addWidget(m_tabs);
+    vbox->addWidget(confirmButton);
+
     this->setLayout(vbox);
 
-    addTribe("gauls", "phalanx", "Low time requirements", "Loot protection and good defense", "Excellent, fast cavalry", "Well suited to new players");
-    addTribe("romans", "legionnaire", "Moderate time requirements", "Can develop villages the fastest", "Very strong but expensive troops", "Hard to play for new players");
-    addTribe("teutons", "clubswinger", "High time requirements", "Good at looting in early game", "Strong, cheap infantry", "For aggressive players");
+    connect(confirmButton, SIGNAL(clicked()), this, SLOT(ouvrirDialogue()));
+
+    addTribe(QT_TR_NOOP("gauls"), "phalanx", tr("Low time requirements"), tr("Loot protection and good defense"), tr("Excellent, fast cavalry"), tr("Well suited to new players"));
+    addTribe(QT_TR_NOOP("romans"), "legionnaire", tr("Moderate time requirements"), tr("Can develop villages the fastest"), tr("Very strong but expensive troops"), tr("Hard to play for new players"));
+    addTribe(QT_TR_NOOP("teutons"), "clubswinger", tr("High time requirements"), tr("Good at looting in early game"), tr("Strong, cheap infantry"), tr("For aggressive players"));
 }
 
 void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended)
 {
-    QWidget* tab = new QWidget; // isn't there any other way to do this ? (QWidget doesn't work here)
+    QWidget* tab = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout;
 
     QWidget* subTabs = new QWidget;
@@ -38,9 +45,6 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     addTribeText(vbox, troopName, troopsTraining);
     addTribeText(vbox, troopName, designedForUsers);
 
-    //vbox->setSpacing(50);
-    //vbox->setContentsMargins(0, 0, 0, 0);
-    //vbox->setMargin(0);
     subTabs->setLayout(vbox);
     hbox->addWidget(subTabs);
 
@@ -50,25 +54,18 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
 
     tab->setLayout(hbox);
 
-    m_tabs->addTab(tab, QIcon(tribeName + ".png"), tr("%1").arg(firstUppercase(tribeName)));
+    m_tabs->addTab(tab, QIcon(tribeName + ".png"), firstUppercase(tr(cStr(tribeName))));
 }
 
 void MyWindow::addTribeText(QVBoxLayout* vbox, QString troopName, QString text)
 {
-    QHBoxLayout* hbox = new QHBoxLayout;
-    QWidget* qLine = new QWidget;
-    QLabel * qText = new QLabel(tr("%1").arg(text)/*, tab*//*, qLine*/);
-    QLabel * qIcon = new QLabel(/*qText*/);
-    qIcon->setPixmap(QPixmap(troopName + ".png"));
-    QStatusBar* qStatusBar = new QStatusBar;
+    QLabel* qText = new QLabel(text), // it's sad that tr here doesn't work "as expected"
+          * qIcon = new QLabel();
+    qIcon->setPixmap(QPixmap(troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
+    QStatusBar* qStatusBar = new QStatusBar; // same here, I didn't achieved to just use a horizontal layout
     qStatusBar->addWidget(qIcon);
     qStatusBar->addWidget(qText);
     qStatusBar->setSizeGripEnabled(false);
-    //hbox->addWidget(qIcon);
-    //hbox->addWidget(qText);
 
-    //qLine->setFrameShape(QFrame::NoFrame);
-    //qLine->setLineWidth(0);
-    //qLine->setLayout(hbox);
-    vbox->addWidget(/*qLine*/qStatusBar/*, 0, Qt::AlignTop*/);
+    vbox->addWidget(qStatusBar);
 }
