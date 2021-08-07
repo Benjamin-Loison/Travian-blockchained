@@ -3,12 +3,13 @@
 #include <QPainter>
 #include "MyWindow.h"
 #include "QStringPlus.h"
+#include "QPlus.h"
 
 MyWindow::MyWindow()
 {
     //setFixedSize(200, 100);
 
-    setWindowIcon(QIcon("travian.png"));
+    setWindowIcon(getQIcon("travian.png"));
     setWindowTitle("Travian blockchained");
 
     QVBoxLayout* vbox = new QVBoxLayout;
@@ -62,12 +63,12 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     hbox->addWidget(subTabs);
 
     QLabel * qIcon = new QLabel();
-    qIcon->setPixmap(QPixmap(tribeName + ".png"));
+    qIcon->setPixmap(getQPixmap(tribeName + ".png"));
     hbox->addWidget(qIcon);
 
     tab->setLayout(hbox);
 
-    m_tabs->addTab(tab, QIcon(tribeName + ".png"), firstUppercase(tr(tribeName.toStdString().c_str())));
+    m_tabs->addTab(tab, getQIcon(tribeName + ".png"), firstUppercase(tr(tribeName.toStdString().c_str())));
 }
 
 void MyWindow::addTribeText(QVBoxLayout* vbox, QString troopName, QString text)
@@ -75,7 +76,7 @@ void MyWindow::addTribeText(QVBoxLayout* vbox, QString troopName, QString text)
     QWidget* qLine = new QWidget;
     QLabel* qText = new QLabel(text), // it's sad that tr here doesn't work "as expected"
           * qIcon = new QLabel();
-    qIcon->setPixmap(QPixmap(troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
+    qIcon->setPixmap(getQPixmap(troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
 
     QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(qIcon);
@@ -83,7 +84,6 @@ void MyWindow::addTribeText(QVBoxLayout* vbox, QString troopName, QString text)
     qLine->setLayout(hbox);
 
     vbox->addWidget(qLine);
-    // if add /*qStatusBar*/ just after opening parenthesis it doesn't compile, I really start loving QtCreator/Qt in general - used to work with QStatusBar but have to disable grip and vertical delimiters
 }
 
 void drawTextCentered(QPainter* painter, unsigned short x, unsigned short y, QString text, bool withBackground = false)
@@ -111,19 +111,22 @@ void MyWindow::setChooseLocationGUI()
 
     QLabel* qIcon = new QLabel();
 
-    QPixmap* map = new QPixmap("map.png"),
-           * banner = new QPixmap("banner.png"); // don't need any free ? ^^'
-    QPainter* painter = new QPainter(map);
+    QPixmap map = getQPixmap("map.png"),
+            banner = getQPixmap("banner.png");
+
+    QPixmap* mapPtr = &map,//new QPixmap("map.png"),
+           * bannerPtr = &banner;//new QPixmap("banner.png"); // don't need any free ? ^^'
+    QPainter* painter = new QPainter(mapPtr);
 
     unsigned short west = 80, // could automatize but not very important because not about to change assets ^^ - should disassembly map in order to get the margin size
                    east = 218,
                    north = 59,
                    south = 187,
                    x = west, y = north,
-                   bannerWidthDiv2 = banner->width() / 2, bannerHeight = banner->height();
+                   bannerWidthDiv2 = banner.width() / 2, bannerHeight = banner.height();
 
 
-    painter->drawPixmap(x, y, *banner);
+    painter->drawPixmap(x, y, /**bannerPtr*/banner);
 
     QFont bold("Verdana", 10);
     bold.setBold(true);
@@ -136,7 +139,7 @@ void MyWindow::setChooseLocationGUI()
 
     drawTextCentered(painter, x + 9, y + bannerHeight + 5,  tr("RECOMMENDED"), true);
 
-    qIcon->setPixmap(*map);
+    qIcon->setPixmap(map);
     qIcon->setAlignment(Qt::AlignCenter);
     qIcon->setCursor(Qt::PointingHandCursor);
     //connect(qIcon, SIGNAL(clicked()), this, SLOT(chooseLocation())); // TODO: not that easy
