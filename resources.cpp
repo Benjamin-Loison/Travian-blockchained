@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include "QPlus.h"
-#include "qhoverLabel.h"
+#include "QHoverLabel.h"
 #include "resources.h"
 
 void setResourcesScreen(MyWindow* window)
