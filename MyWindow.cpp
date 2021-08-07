@@ -1,13 +1,17 @@
 #include <QApplication> // why need this if it is also in the header ?!
 #include <QtWidgets>
 #include <QPainter>
-#include "MyWindow.h"
 #include "QStringPlus.h"
 #include "QPlus.h"
+#include "resources.h"
+#include "main.h"
+#include "MyWindow.h"
 
 MyWindow::MyWindow()
 {
     //setFixedSize(200, 100);
+
+    screenView = SCREEN_VIEW_SELECT_TRIBE;
 
     setWindowIcon(getQIcon("travian.png"));
     setWindowTitle("Travian blockchained");
@@ -101,6 +105,8 @@ void drawTextCentered(QPainter* painter, unsigned short x, unsigned short y, QSt
 
 void MyWindow::setChooseLocationGUI()
 {
+    screenView = SCREEN_VIEW_SELECT_LOCATION;
+
     QWidget* screen = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout;
     QLabel* title = setTitle(tr("Select your starting position")), // could make a macro ^^
@@ -111,7 +117,7 @@ void MyWindow::setChooseLocationGUI()
 
     QLabel* qIcon = new QLabel();
 
-    QPixmap map = getQPixmap("map.png"),
+    QPixmap map = getQPixmap("locations.png"), // map already used
             banner = getQPixmap("banner.png");
 
     QPixmap* mapPtr = &map,//new QPixmap("map.png"),
@@ -124,7 +130,6 @@ void MyWindow::setChooseLocationGUI()
                    south = 187,
                    x = west, y = north,
                    bannerWidthDiv2 = banner.width() / 2, bannerHeight = banner.height();
-
 
     painter->drawPixmap(x, y, /**bannerPtr*/banner);
 
@@ -139,6 +144,8 @@ void MyWindow::setChooseLocationGUI()
 
     drawTextCentered(painter, x + 9, y + bannerHeight + 5,  tr("RECOMMENDED"), true);
 
+    painter->end(); // otherwise there is an error in logs
+
     qIcon->setPixmap(map);
     qIcon->setAlignment(Qt::AlignCenter);
     qIcon->setCursor(Qt::PointingHandCursor);
@@ -152,6 +159,34 @@ void MyWindow::setChooseLocationGUI()
     setCentralWidget(screen);
 }
 
+void MyWindow::manageBackground()
+{
+    // this background while choosing tribe and location was initially a bug but it renders quite fine ^^
+    if(screenView == SCREEN_VIEW_SELECT_TRIBE || screenView == SCREEN_VIEW_SELECT_LOCATION)
+    {
+        return;
+    }
+    QPixmap qBackgroundPixmap = getQPixmap("resourcesBackground.jpg");
+    QPainter* painter = new QPainter(&qBackgroundPixmap);
+
+    painter->drawPixmap(605, 193, getQPixmap("resources3.png"));
+    painter->drawPixmap(773, 298, getQPixmap("village.png")); // should add tooltip in the future
+    painter->end();
+
+    qBackgroundPixmap = qBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, qBackgroundPixmap);
+    setPalette(palette);
+    //setAutoFillBackground(true);
+}
+
+void MyWindow::resizeEvent(QResizeEvent* evt)
+{
+    manageBackground();
+
+    QMainWindow::resizeEvent(evt);
+}
+
 void MyWindow::chooseLocation()
 {
     QMessageBox::information(this, "Titre de la fenêtre", "Choosed location !");
@@ -159,5 +194,8 @@ void MyWindow::chooseLocation()
 
 void MyWindow::startGame()
 {
+    screenView = SCREEN_VIEW_RESOURCES;
     //QMessageBox::information(this, "Titre de la fenêtre", "Bonjour et bienvenueà tous les Zéros !");
+    setResourcesScreen(this);
+    manageBackground();
 }

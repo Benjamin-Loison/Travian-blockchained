@@ -1,6 +1,9 @@
 #include <QApplication>
 #include <QtWidgets>
 #include "MyWindow.h"
+#include "main.h"
+
+screenViewEnum screenView;
 
 int main(int argc, char *argv[])
 {

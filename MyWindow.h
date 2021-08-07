@@ -1,5 +1,5 @@
-#ifndef DEF_MYWINDOW
-#define DEF_MYWINDOW
+#ifndef DEF_MYWINDOW_H
+#define DEF_MYWINDOW_H
 
 #include <QtWidgets>
 #include <QApplication>
@@ -16,6 +16,9 @@ class MyWindow : public QMainWindow
     public:
         MyWindow();
 
+    protected:
+        void resizeEvent(QResizeEvent* evt) override;
+
     public slots:
         void setChooseLocationGUI();
         void chooseLocation();
@@ -23,7 +26,8 @@ class MyWindow : public QMainWindow
 
     private:
         void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
-             addTribeText(QVBoxLayout* vbox, QString troopName, QString text);
+             addTribeText(QVBoxLayout* vbox, QString troopName, QString text),
+             manageBackground();
         QTabWidget* m_tabs;
         QLabel* setTitle(QString title);
 };
