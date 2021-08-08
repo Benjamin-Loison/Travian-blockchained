@@ -4,9 +4,11 @@
 #include "QPlus.h"
 #include "QHoverLabel.h"
 #include "resources.h"
+#include "main.h"
 
 qint64 timestampVillageStart,
        timestampGameRestored; // maybe can accumulate fraction of second errors
+
 quint32 lumberProduction = 58, // should use an array ?
         clayProduction = 52,
         ironProduction = 48,
@@ -41,7 +43,7 @@ void setResourcesScreen(MyWindow* window)
            * qResourcesProductionTroopsForBox = new QWidget,
            * qResourcesProduction = new QWidget,
            * qTroops = new QWidget;
-    QLabel* qResources = getQLabel("resourcesHover", true, QT_TR_NOOP("resources")),
+    QLabel* qResources = getQLabel("resourcesHover", true, QObject::tr("resources")),
           * qBuildings = new QHoverLabel(QT_TR_NOOP("buildings")),
           * qMap = new QHoverLabel(QT_TR_NOOP("map")),
           * qStatistics = new QHoverLabel(QT_TR_NOOP("statistics")),
@@ -123,12 +125,12 @@ void setResourcesScreen(MyWindow* window)
     window->setCentralWidget(screen);
 }
 
-void addResourceInfo(QHBoxLayout* hbox, QString name, quint32 capacity, QColor backgroundColor, QColor foregroundColor)
+QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor, QColor foregroundColor)
 {
     QWidget* resourceCapacity = new QWidget;
     QHBoxLayout* resourceCapacityHBox = new QHBoxLayout;
 
-    resourceCapacityHBox->addWidget(getQLabel(name, true));
+    resourceCapacityHBox->addWidget(getQLabel(name, true, name));
     QLabel* qLabel = new QLabel(std::to_string(capacity).c_str());
     //qLabel->setFont(QFont("Impact", 12));
 
@@ -136,6 +138,12 @@ void addResourceInfo(QHBoxLayout* hbox, QString name, quint32 capacity, QColor b
 
     resourceCapacity->setLayout(resourceCapacityHBox);
     setColor(resourceCapacity, backgroundColor, foregroundColor);
+    return resourceCapacity;
+}
+
+void addResourceInfo(QHBoxLayout* hbox, QString name, quint32 capacity, QColor backgroundColor, QColor foregroundColor)
+{
+    QWidget* resourceCapacity = getResourceInfo(name, capacity, backgroundColor, foregroundColor);
     hbox->addWidget(resourceCapacity);
 }
 
@@ -144,9 +152,17 @@ void addResourceCapacity(QHBoxLayout* hbox, QString name, quint32 capacity)
     addResourceInfo(hbox, name, capacity, QColor(102, 78, 64), Qt::white);
 }
 
+QWidget* getResource(QString name, quint32 amount)
+{
+    QWidget* qWidget = getResourceInfo(name, amount, QColor(227, 212, 188), Qt::black);
+    return qWidget;
+}
+
 void addResource(QHBoxLayout* hbox, QString name, quint32 amount)
 {
-    addResourceInfo(hbox, name, amount, QColor(227, 212, 188), Qt::black);
+    QWidget* qWidget = getResource(name, amount);
+    hbox->addWidget(qWidget);
+    //addResourceInfo(hbox, name, amount, QColor(227, 212, 188), Qt::black);
     //addResourceCapacity(hbox, name, amount); // will soonly have to customize a bit
     //hbox->addWidget(getQLabel(name, true));
     //hbox->addWidget(new QLabel(std::to_string(amount).c_str()));
@@ -180,11 +196,48 @@ void updateResourcesAmount()
     double timeDelta = QDateTime::currentSecsSinceEpoch() - timestampGameRestored,
            timeFraction = timeDelta / 3600;
     lumberAmount = initialLumberAmount + lumberProduction * timeFraction;
-    qInfo(std::to_string(timeFraction).c_str());
-    qInfo(std::to_string(initialLumberAmount).c_str());
-    qInfo(std::to_string(lumberProduction).c_str());
-    qInfo(std::to_string(lumberAmount).c_str());
     clayAmount = initialClayAmount + clayProduction * timeFraction;
     ironAmount = initialIronAmount + ironProduction * timeFraction;
     cropAmount = initialCropAmount + cropProduction * timeFraction;
+}
+
+void updateScreen(MyWindow* window)
+{
+    //setResourcesScreen(window);
+
+    updateResourcesAmount();
+
+    QWidget* centralWidget = window->centralWidget();
+    QLayout* layout = centralWidget->layout();
+    if(layout == nullptr)
+        qInfo("huge layout error");
+    //qInfo(std::to_string(layout->count()).c_str());
+    qInfo("here");
+    QLayoutItem* layoutItem = layout->itemAt(1);
+    for(qint8 i = 0; i < layout->count(); i++)
+    {
+        qInfo(std::to_string(i).c_str());
+        qInfo(layout->itemAt(i)->layout() != nullptr ? "layout" : "not layout");
+    }
+    if(layoutItem == 0)
+        qInfo("first layout error");
+    qInfo("da");
+    QLayout* subLayout = layoutItem->layout();
+    if(subLayout == nullptr)
+        qInfo("sub layout error");
+    qInfo(std::to_string(subLayout->count()).c_str());
+    QLayoutItem* subLayoutItem = subLayout->itemAt(2); // is a Strecth a QLayoutItem ? - it counts
+    if(subLayoutItem == 0)
+        qInfo("layout error");
+    QWidget* oldQWidget = subLayoutItem->widget();
+    QWidget* qWidget = getResource("lumber", lumberAmount);
+    if(layout->replaceWidget(oldQWidget, qWidget) == nullptr)
+        qInfo("error");
+
+    /*addResourceCapacity(qResourcesHBox, QT_TR_NOOP("warehouse"), 800);
+    addResource(qResourcesHBox, QT_TR_NOOP("lumber"), lumberAmount);
+    addResource(qResourcesHBox, QT_TR_NOOP("clay"), clayAmount);
+    addResource(qResourcesHBox, QT_TR_NOOP("iron"), ironAmount);
+    addResourceCapacity(qResourcesHBox, QT_TR_NOOP("granary"), 800);
+    addResource(qResourcesHBox, QT_TR_NOOP("crop"), cropAmount);*/
 }

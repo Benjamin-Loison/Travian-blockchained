@@ -4,12 +4,16 @@
 #include "MyWindow.h"
 
 void setResourcesScreen(MyWindow* window),
-     addResourceCapacity(QHBoxLayout* hbox, QString name, unsigned int capacity),
-     addResource(QHBoxLayout* hbox, QString name, unsigned int amount),
+     addResourceCapacity(QHBoxLayout* hbox, QString name, quint32 capacity),
+     addResource(QHBoxLayout* hbox, QString name, quint32 amount),
      setBackgroundColor(QWidget* qWidget, QColor color),
-     addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, unsigned int production),
-     addTroopLine(QVBoxLayout* qTroopsVBox, QString name, unsigned int amount),
-     updateResourcesAmount();
+     addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, quint32 production),
+     addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount),
+     updateResourcesAmount(),
+     updateScreen(MyWindow* window);
+
+QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor, QColor foregroundColor),
+       * getResource(QString name, quint32 amount);
 
 extern qint64 timestampVillageStart,
               timestampGameRestored;

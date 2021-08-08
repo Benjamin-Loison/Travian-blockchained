@@ -210,5 +210,6 @@ void MyWindow::startGame()
 
 void MyWindow::refreshLoop()
 {
-    setResourcesScreen(this); // let's not assume + 1 each time in case of desync etc
+    updateScreen(this);
+    //setResourcesScreen(this); // let's not assume + 1 each time in case of desync etc
 }

@@ -4,12 +4,12 @@
 #include "main.h"
 
 screenViewEnum screenView;
+QTranslator translator;
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QTranslator translator;
     translator.load("travianblockchained_fr");
     app.installTranslator(&translator);
 
