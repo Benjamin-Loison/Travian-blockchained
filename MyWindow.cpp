@@ -120,18 +120,17 @@ void MyWindow::setChooseLocationGUI()
     QPixmap map = getQPixmap("locations.png"), // map already used
             banner = getQPixmap("banner.png");
 
-    QPixmap* mapPtr = &map,//new QPixmap("map.png"),
-           * bannerPtr = &banner;//new QPixmap("banner.png"); // don't need any free ? ^^'
+    QPixmap* mapPtr = &map; // don't need any free ? ^^'
     QPainter* painter = new QPainter(mapPtr);
 
-    unsigned short west = 80, // could automatize but not very important because not about to change assets ^^ - should disassembly map in order to get the margin size
-                   east = 218,
-                   north = 59,
-                   south = 187,
-                   x = west, y = north,
-                   bannerWidthDiv2 = banner.width() / 2, bannerHeight = banner.height();
+    quint16 west = 80, // could automatize but not very important because not about to change assets ^^ - should disassembly map in order to get the margin size
+            east = 218,
+            north = 59,
+            south = 187,
+            x = west, y = north,
+            bannerWidthDiv2 = banner.width() / 2, bannerHeight = banner.height();
 
-    painter->drawPixmap(x, y, /**bannerPtr*/banner);
+    painter->drawPixmap(x, y, banner);
 
     QFont bold("Verdana", 10);
     bold.setBold(true);
@@ -196,6 +195,20 @@ void MyWindow::startGame()
 {
     screenView = SCREEN_VIEW_RESOURCES;
     //QMessageBox::information(this, "Titre de la fenêtre", "Bonjour et bienvenueà tous les Zéros !");
+
+    timestampVillageStart = QDateTime::currentSecsSinceEpoch();
+    timestampGameRestored = timestampVillageStart;
+
     setResourcesScreen(this);
     manageBackground();
+
+    QTimer* timer = new QTimer();
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(refreshLoop()));
+    timer->start(1000);
+
+}
+
+void MyWindow::refreshLoop()
+{
+    setResourcesScreen(this); // let's not assume + 1 each time in case of desync etc
 }

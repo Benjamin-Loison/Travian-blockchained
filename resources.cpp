@@ -5,9 +5,25 @@
 #include "QHoverLabel.h"
 #include "resources.h"
 
+qint64 timestampVillageStart,
+       timestampGameRestored; // maybe can accumulate fraction of second errors
+quint32 lumberProduction = 58, // should use an array ?
+        clayProduction = 52,
+        ironProduction = 48,
+        cropProduction = 56,
+
+        lumberAmount = 0, // 750 all by default
+        clayAmount = 0,
+        ironAmount = 0,
+        cropAmount = 0,
+
+        initialLumberAmount = 0,
+        initialClayAmount = 0,
+        initialIronAmount = 0,
+        initialCropAmount = 0;
+
 void setResourcesScreen(MyWindow* window)
 {
-    QWidget* screen = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout,
                * qResourcesProductionTroopsVBox = new QVBoxLayout,
                * qResourcesProductionVBox = new QVBoxLayout,
@@ -17,7 +33,8 @@ void setResourcesScreen(MyWindow* window)
                * qResourcesHBox = new QHBoxLayout,
                * qResourcesProductionTroopsHBox = new QHBoxLayout;
 
-    QWidget* qTop = new QWidget,
+    QWidget* screen = new QWidget,
+           * qTop = new QWidget,
            * qTabsIcons = new QWidget,
            * qTabsResources = new QWidget,
            * qResourcesProductionTroops = new QWidget,
@@ -53,12 +70,14 @@ void setResourcesScreen(MyWindow* window)
     // resources
     qResourcesHBox->addStretch();
 
+    updateResourcesAmount();
+
     addResourceCapacity(qResourcesHBox, QT_TR_NOOP("warehouse"), 800);
-    addResource(qResourcesHBox, QT_TR_NOOP("lumber"), 750);
-    addResource(qResourcesHBox, QT_TR_NOOP("clay"), 750);
-    addResource(qResourcesHBox, QT_TR_NOOP("iron"), 750);
+    addResource(qResourcesHBox, QT_TR_NOOP("lumber"), lumberAmount);
+    addResource(qResourcesHBox, QT_TR_NOOP("clay"), clayAmount);
+    addResource(qResourcesHBox, QT_TR_NOOP("iron"), ironAmount);
     addResourceCapacity(qResourcesHBox, QT_TR_NOOP("granary"), 800);
-    addResource(qResourcesHBox, QT_TR_NOOP("crop"), 750);
+    addResource(qResourcesHBox, QT_TR_NOOP("crop"), cropAmount);
 
     qResourcesHBox->addStretch();
     qTabsResources->setLayout(qResourcesHBox);
@@ -71,10 +90,10 @@ void setResourcesScreen(MyWindow* window)
 
     setColor(qResourcesProduction, backgroundResourcesProductionTroops);
     qResourcesProductionVBox->addWidget(new QLabel(QObject::tr("Production per hour") + ":"));
-    addProductionLine(qResourcesProductionVBox, "lumber", 58);
-    addProductionLine(qResourcesProductionVBox, "clay", 52);
-    addProductionLine(qResourcesProductionVBox, "iron", 48);
-    addProductionLine(qResourcesProductionVBox, "crop", 56);
+    addProductionLine(qResourcesProductionVBox, "lumber", lumberProduction);
+    addProductionLine(qResourcesProductionVBox, "clay", clayProduction);
+    addProductionLine(qResourcesProductionVBox, "iron", ironProduction);
+    addProductionLine(qResourcesProductionVBox, "crop", cropProduction);
     qResourcesProduction->setLayout(qResourcesProductionVBox);
 
     // troops
@@ -82,16 +101,6 @@ void setResourcesScreen(MyWindow* window)
     qTroopsVBox->addWidget(new QLabel(QObject::tr("Troops") + ":"));
     addTroopLine(qTroopsVBox, QT_TR_NOOP("hero"), 1);
     qTroops->setLayout(qTroopsVBox);
-
-
-    /*qResourcesProductionTroopsVBox->addWidget(qResourcesProduction);
-    qResourcesProductionTroopsVBox->addWidget(qTroops);
-    qResourcesProductionTroops->setLayout(qResourcesProductionTroopsVBox);
-
-    qResourcesProductionTroopsHBox->addWidget(qResourcesProductionTroops);
-    qResourcesProductionTroopsHBox->addStretch(2);
-    qResourcesProductionTroopsForBox->setLayout(qResourcesProductionTroopsHBox);*/
-
 
     qResourcesProductionTroopsVBox->addWidget(qResourcesProduction);
     qResourcesProductionTroopsVBox->addWidget(qTroops);
@@ -114,7 +123,7 @@ void setResourcesScreen(MyWindow* window)
     window->setCentralWidget(screen);
 }
 
-void addResourceInfo(QHBoxLayout* hbox, QString name, unsigned int capacity, QColor backgroundColor, QColor foregroundColor)
+void addResourceInfo(QHBoxLayout* hbox, QString name, quint32 capacity, QColor backgroundColor, QColor foregroundColor)
 {
     QWidget* resourceCapacity = new QWidget;
     QHBoxLayout* resourceCapacityHBox = new QHBoxLayout;
@@ -130,12 +139,12 @@ void addResourceInfo(QHBoxLayout* hbox, QString name, unsigned int capacity, QCo
     hbox->addWidget(resourceCapacity);
 }
 
-void addResourceCapacity(QHBoxLayout* hbox, QString name, unsigned int capacity)
+void addResourceCapacity(QHBoxLayout* hbox, QString name, quint32 capacity)
 {
     addResourceInfo(hbox, name, capacity, QColor(102, 78, 64), Qt::white);
 }
 
-void addResource(QHBoxLayout* hbox, QString name, unsigned int amount)
+void addResource(QHBoxLayout* hbox, QString name, quint32 amount)
 {
     addResourceInfo(hbox, name, amount, QColor(227, 212, 188), Qt::black);
     //addResourceCapacity(hbox, name, amount); // will soonly have to customize a bit
@@ -143,7 +152,7 @@ void addResource(QHBoxLayout* hbox, QString name, unsigned int amount)
     //hbox->addWidget(new QLabel(std::to_string(amount).c_str()));
 }
 
-void addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, unsigned int production)
+void addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, quint32 production)
 {
     QWidget* productionLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
@@ -155,7 +164,7 @@ void addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, unsi
     qResourcesProductionVBox->addWidget(productionLine);
 }
 
-void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, unsigned int amount)
+void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount)
 {
     QWidget* troopLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
@@ -164,4 +173,18 @@ void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, unsigned int amount)
     hbox->addStretch();
     troopLine->setLayout(hbox);
     qTroopsVBox->addWidget(troopLine);
+}
+
+void updateResourcesAmount()
+{
+    double timeDelta = QDateTime::currentSecsSinceEpoch() - timestampGameRestored,
+           timeFraction = timeDelta / 3600;
+    lumberAmount = initialLumberAmount + lumberProduction * timeFraction;
+    qInfo(std::to_string(timeFraction).c_str());
+    qInfo(std::to_string(initialLumberAmount).c_str());
+    qInfo(std::to_string(lumberProduction).c_str());
+    qInfo(std::to_string(lumberAmount).c_str());
+    clayAmount = initialClayAmount + clayProduction * timeFraction;
+    ironAmount = initialIronAmount + ironProduction * timeFraction;
+    cropAmount = initialCropAmount + cropProduction * timeFraction;
 }

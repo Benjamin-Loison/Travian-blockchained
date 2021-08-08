@@ -8,6 +8,10 @@ void setResourcesScreen(MyWindow* window),
      addResource(QHBoxLayout* hbox, QString name, unsigned int amount),
      setBackgroundColor(QWidget* qWidget, QColor color),
      addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, unsigned int production),
-     addTroopLine(QVBoxLayout* qTroopsVBox, QString name, unsigned int amount);
+     addTroopLine(QVBoxLayout* qTroopsVBox, QString name, unsigned int amount),
+     updateResourcesAmount();
+
+extern qint64 timestampVillageStart,
+              timestampGameRestored;
 
 #endif

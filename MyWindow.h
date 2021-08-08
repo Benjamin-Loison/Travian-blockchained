@@ -23,6 +23,7 @@ class MyWindow : public QMainWindow
         void setChooseLocationGUI();
         void chooseLocation();
         void startGame(); // can't use a single void for all slots :'(
+        void refreshLoop();
 
     private:
         void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
