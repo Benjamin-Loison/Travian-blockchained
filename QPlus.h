@@ -7,6 +7,7 @@
 
 QIcon getQIcon(QString path);
 QPixmap getQPixmap(QString path);
-QLabel* getQLabel(QString path, bool needPointingHandCursor = false);
+QLabel* getQLabel(QString path, bool needPointingHandCursor = false, QString name = "");
+void setColor(QWidget* qWidget, QColor backgroundColor, QColor foregroundColor = QColor());
 
 #endif
