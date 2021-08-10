@@ -43,12 +43,13 @@ void setResourcesScreen(MyWindow* window)
            * qResourcesProductionTroopsForBox = new QWidget,
            * qResourcesProduction = new QWidget,
            * qTroops = new QWidget;
-    QLabel* qResources = getQLabel("resourcesHover", true, QObject::tr("resources")),
-          * qBuildings = new QHoverLabel(QT_TR_NOOP("buildings")),
-          * qMap = new QHoverLabel(QT_TR_NOOP("map")),
-          * qStatistics = new QHoverLabel(QT_TR_NOOP("statistics")),
-          * qReports = new QHoverLabel(QT_TR_NOOP("reports")),
-          * qMessages = new QHoverLabel(QT_TR_NOOP("messages"));
+    QString tabsAssets = "tabs/";
+    QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QObject::tr("resources")),
+          * qBuildings = new QHoverLabel(tabsAssets + QT_TR_NOOP("buildings"), "buildings"),
+          * qMap = new QHoverLabel(tabsAssets + QT_TR_NOOP("map"), "map"),
+          * qStatistics = new QHoverLabel(tabsAssets + QT_TR_NOOP("statistics"), "statistics"),
+          * qReports = new QHoverLabel(tabsAssets + QT_TR_NOOP("reports"), "reports"),
+          * qMessages = new QHoverLabel(tabsAssets + QT_TR_NOOP("messages"), "messages");
 
     // tabs icons
     qTopHBox->addStretch();
@@ -130,7 +131,7 @@ QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor,
     QWidget* resourceCapacity = new QWidget;
     QHBoxLayout* resourceCapacityHBox = new QHBoxLayout;
 
-    resourceCapacityHBox->addWidget(getQLabel(name, true, name));
+    resourceCapacityHBox->addWidget(getQLabel("resources/" + name, true, name));
     QLabel* qLabel = new QLabel(std::to_string(capacity).c_str());
     //qLabel->setFont(QFont("Impact", 12));
 
@@ -172,7 +173,7 @@ void addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, quin
 {
     QWidget* productionLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->addWidget(getQLabel(name));
+    hbox->addWidget(getQLabel("resources/" + name));
     hbox->addWidget(new QLabel(firstUppercase(QObject::tr(name.toStdString().c_str()) + ":")));
     hbox->addStretch();
     hbox->addWidget(new QLabel(QString::number(production)));
@@ -184,7 +185,7 @@ void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount)
 {
     QWidget* troopLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->addWidget(getQLabel(name + ".png"));
+    hbox->addWidget(getQLabel("troops/" + name + ".png"));
     hbox->addWidget(new QLabel(QString::number(amount) + " " + firstUppercase(QObject::tr(name.toStdString().c_str()))));
     hbox->addStretch();
     troopLine->setLayout(hbox);
@@ -204,8 +205,10 @@ void updateResourcesAmount()
 void updateScreen(MyWindow* window)
 {
     //setResourcesScreen(window);
+    //return;
 
     updateResourcesAmount();
+    return;
 
     QWidget* centralWidget = window->centralWidget();
     QLayout* layout = centralWidget->layout();

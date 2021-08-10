@@ -58,16 +58,16 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     QWidget* subTabs = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
 
-    addTribeText(vbox, troopName, timeRequirement);
-    addTribeText(vbox, troopName, speciality);
-    addTribeText(vbox, troopName, troopsTraining);
-    addTribeText(vbox, troopName, designedForUsers);
+    addTribeText(vbox, tribeName, troopName, timeRequirement);
+    addTribeText(vbox, tribeName, troopName, speciality);
+    addTribeText(vbox, tribeName, troopName, troopsTraining);
+    addTribeText(vbox, tribeName, troopName, designedForUsers);
 
     subTabs->setLayout(vbox);
     hbox->addWidget(subTabs);
 
     QLabel * qIcon = new QLabel();
-    qIcon->setPixmap(getQPixmap(tribeName + ".png"));
+    qIcon->setPixmap(getQPixmap("tribes/" + tribeName + ".png"));
     hbox->addWidget(qIcon);
 
     tab->setLayout(hbox);
@@ -75,12 +75,12 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     m_tabs->addTab(tab, getQIcon(tribeName + ".png"), firstUppercase(tr(tribeName.toStdString().c_str())));
 }
 
-void MyWindow::addTribeText(QVBoxLayout* vbox, QString troopName, QString text)
+void MyWindow::addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text)
 {
     QWidget* qLine = new QWidget;
     QLabel* qText = new QLabel(text), // it's sad that tr here doesn't work "as expected"
           * qIcon = new QLabel();
-    qIcon->setPixmap(getQPixmap(troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
+    qIcon->setPixmap(getQPixmap("troops/" + tribeName + "/" + troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
 
     QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(qIcon);
@@ -117,8 +117,9 @@ void MyWindow::setChooseLocationGUI()
 
     QLabel* qIcon = new QLabel();
 
-    QPixmap map = getQPixmap("locations.png"), // map already used
-            banner = getQPixmap("banner.png");
+    QString locationsFolder = "locations/";
+    QPixmap map = getQPixmap(locationsFolder + "locations.png"), // map already used
+            banner = getQPixmap(locationsFolder + "banner.png");
 
     QPixmap* mapPtr = &map; // don't need any free ? ^^'
     QPainter* painter = new QPainter(mapPtr);
@@ -165,11 +166,12 @@ void MyWindow::manageBackground()
     {
         return;
     }
-    QPixmap qBackgroundPixmap = getQPixmap("resourcesBackground.jpg");
+    QString villageAssets = "village/";
+    QPixmap qBackgroundPixmap = getQPixmap(villageAssets + "resourcesBackground.jpg");
     QPainter* painter = new QPainter(&qBackgroundPixmap);
 
-    painter->drawPixmap(605, 193, getQPixmap("resources3.png"));
-    painter->drawPixmap(773, 298, getQPixmap("village.png")); // should add tooltip in the future
+    painter->drawPixmap(605, 193, getQPixmap(villageAssets + "resources3.png"));
+    painter->drawPixmap(773, 298, getQPixmap(villageAssets + "village.png")); // should add tooltip in the future
     painter->end();
 
     qBackgroundPixmap = qBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio);

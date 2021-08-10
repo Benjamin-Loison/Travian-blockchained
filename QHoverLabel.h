@@ -11,7 +11,7 @@ class QHoverLabel : public QLabel
     Q_OBJECT
 
     public:
-        QHoverLabel(QString path, QWidget* parent = nullptr) : QLabel(parent)
+        QHoverLabel(QString path, QString name, QWidget* parent = nullptr) : QLabel(parent)
         {
             m_notHoverPixmap = getQPixmap(path + ".png");
             m_hoverPixmap = getQPixmap(path + "Hover.png");
@@ -21,7 +21,7 @@ class QHoverLabel : public QLabel
             QSize s = m_notHoverPixmap.size();
             setMaximumSize(s.width(), s.height()); // otherwise QLabel bounding box goes crazy
             //setAlignment(Qt::AlignTop); // only if removes setMaximumSize setAlignement works
-            setToolTip(QObject::tr(firstUppercase(path).toStdString().c_str()));
+            setToolTip(QObject::tr(firstUppercase(/*path*/name).toStdString().c_str()));
         }
 
     protected:
