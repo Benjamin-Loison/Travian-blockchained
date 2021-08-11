@@ -6,6 +6,9 @@
 #include "resources.h"
 #include "main.h"
 
+// this doesn't work as expected why ?!
+//#define MYTR(x) QT_TRANSLATE_NOOP("resources", x)
+
 qint64 timestampVillageStart,
        timestampGameRestored; // maybe can accumulate fraction of second errors
 
@@ -44,12 +47,12 @@ void setResourcesScreen(MyWindow* window)
            * qResourcesProduction = new QWidget,
            * qTroops = new QWidget;
     QString tabsAssets = "tabs/";
-    QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QObject::tr("resources")),
-          * qBuildings = new QHoverLabel(tabsAssets + QT_TR_NOOP("buildings"), "buildings"),
-          * qMap = new QHoverLabel(tabsAssets + QT_TR_NOOP("map"), "map"),
-          * qStatistics = new QHoverLabel(tabsAssets + QT_TR_NOOP("statistics"), "statistics"),
-          * qReports = new QHoverLabel(tabsAssets + QT_TR_NOOP("reports"), "reports"),
-          * qMessages = new QHoverLabel(tabsAssets + QT_TR_NOOP("messages"), "messages");
+    QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources"),
+          * qBuildings = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings"),
+          * qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
+          * qStatistics = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "statistics"), "statistics"),
+          * qReports = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "reports"), "reports"),
+          * qMessages = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "messages"), "messages");
 
     // tabs icons
     qTopHBox->addStretch();
@@ -75,12 +78,12 @@ void setResourcesScreen(MyWindow* window)
 
     updateResourcesAmount();
 
-    addResourceCapacity(qResourcesHBox, QT_TR_NOOP("warehouse"), 800);
-    addResource(qResourcesHBox, QT_TR_NOOP("lumber"), lumberAmount);
-    addResource(qResourcesHBox, QT_TR_NOOP("clay"), clayAmount);
-    addResource(qResourcesHBox, QT_TR_NOOP("iron"), ironAmount);
-    addResourceCapacity(qResourcesHBox, QT_TR_NOOP("granary"), 800);
-    addResource(qResourcesHBox, QT_TR_NOOP("crop"), cropAmount);
+    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "warehouse"), 800);
+    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "lumber"), lumberAmount); // QT_TR_NOOP doesn't work because of no context I think even if tr was working :')
+    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "clay"), clayAmount);
+    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "iron"), ironAmount);
+    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "granary"), 800);
+    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "crop"), cropAmount);
 
     qResourcesHBox->addStretch();
     qTabsResources->setLayout(qResourcesHBox);
@@ -102,7 +105,7 @@ void setResourcesScreen(MyWindow* window)
     // troops
     setColor(qTroops, backgroundResourcesProductionTroops);
     qTroopsVBox->addWidget(new QLabel(QObject::tr("Troops") + ":"));
-    addTroopLine(qTroopsVBox, QT_TR_NOOP("hero"), 1);
+    addTroopLine(qTroopsVBox, QT_TRANSLATE_NOOP("resources", "hero"), 1);
     qTroops->setLayout(qTroopsVBox);
 
     qResourcesProductionTroopsVBox->addWidget(qResourcesProduction);
@@ -174,7 +177,7 @@ void addProductionLine(QVBoxLayout* qResourcesProductionVBox, QString name, quin
     QWidget* productionLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(getQLabel("resources/" + name));
-    hbox->addWidget(new QLabel(firstUppercase(QObject::tr(name.toStdString().c_str()) + ":")));
+    hbox->addWidget(new QLabel(firstUppercase(translator.translate("resources", name.toStdString().c_str()) + ":")));
     hbox->addStretch();
     hbox->addWidget(new QLabel(QString::number(production)));
     productionLine->setLayout(hbox);
@@ -185,8 +188,12 @@ void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount)
 {
     QWidget* troopLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->addWidget(getQLabel("troops/" + name + ".png"));
-    hbox->addWidget(new QLabel(QString::number(amount) + " " + firstUppercase(QObject::tr(name.toStdString().c_str()))));
+    hbox->addWidget(getQLabel("troops/" + name + ".png")); // QT_TR_N_NOOP()
+    //qInfo(name.toStdString().c_str());
+    hbox->addWidget(new QLabel(QString::number(amount) + " " + firstUppercase(translator.translate("resources", name.toStdString().c_str()))));
+    //qInfo(QObject::tr(name.toStdString().c_str()).toStdString().c_str());
+    //qInfo(translator.tr(name.toStdString().c_str()).toStdString().c_str());
+    //qInfo(translator.translate("resources", name.toStdString().c_str()).toStdString().c_str());
     hbox->addStretch();
     troopLine->setLayout(hbox);
     qTroopsVBox->addWidget(troopLine);
@@ -204,38 +211,39 @@ void updateResourcesAmount()
 
 void updateScreen(MyWindow* window)
 {
-    //setResourcesScreen(window);
-    //return;
-
     updateResourcesAmount();
+    setResourcesScreen(window);
     return;
+
+    //return;
+    // TODO: could at least update screen only when resources amount change etc - otherwise have tooltip problem
 
     QWidget* centralWidget = window->centralWidget();
     QLayout* layout = centralWidget->layout();
-    if(layout == nullptr)
-        qInfo("huge layout error");
+    //if(layout == nullptr)
+    //    qInfo("huge layout error");
     //qInfo(std::to_string(layout->count()).c_str());
-    qInfo("here");
+    //qInfo("here");
     QLayoutItem* layoutItem = layout->itemAt(1);
-    for(qint8 i = 0; i < layout->count(); i++)
-    {
-        qInfo(std::to_string(i).c_str());
-        qInfo(layout->itemAt(i)->layout() != nullptr ? "layout" : "not layout");
-    }
-    if(layoutItem == 0)
-        qInfo("first layout error");
-    qInfo("da");
+    //for(qint8 i = 0; i < layout->count(); i++)
+    //{
+    //    qInfo(std::to_string(i).c_str());
+    //    qInfo(layout->itemAt(i)->layout() != nullptr ? "layout" : "not layout");
+    //}
+    //if(layoutItem == 0)
+    //    qInfo("first layout error");
+    //qInfo("da");
     QLayout* subLayout = layoutItem->layout();
-    if(subLayout == nullptr)
-        qInfo("sub layout error");
-    qInfo(std::to_string(subLayout->count()).c_str());
+    //if(subLayout == nullptr)
+    //    qInfo("sub layout error");
+    //qInfo(std::to_string(subLayout->count()).c_str());
     QLayoutItem* subLayoutItem = subLayout->itemAt(2); // is a Strecth a QLayoutItem ? - it counts
-    if(subLayoutItem == 0)
-        qInfo("layout error");
+    //if(subLayoutItem == 0)
+    //    qInfo("layout error");
     QWidget* oldQWidget = subLayoutItem->widget();
     QWidget* qWidget = getResource("lumber", lumberAmount);
-    if(layout->replaceWidget(oldQWidget, qWidget) == nullptr)
-        qInfo("error");
+    //if(layout->replaceWidget(oldQWidget, qWidget) == nullptr)
+    //    qInfo("error");
 
     /*addResourceCapacity(qResourcesHBox, QT_TR_NOOP("warehouse"), 800);
     addResource(qResourcesHBox, QT_TR_NOOP("lumber"), lumberAmount);

@@ -58,27 +58,27 @@
         <translation>Où voulez-vous commencer à bâtir votre empire ? Choisissez la zone &quot;Recommandée&quot; pour rejoindre l&apos;emplacement idéal. Ou sélectionnez la zone où vos amis sont situés et faites équipe !</translation>
     </message>
     <message>
-        <location filename="MyWindow.cpp" line="139"/>
+        <location filename="MyWindow.cpp" line="140"/>
         <source>NORTH-WEST</source>
         <translation>NORD-OUEST</translation>
     </message>
     <message>
-        <location filename="MyWindow.cpp" line="140"/>
+        <location filename="MyWindow.cpp" line="141"/>
         <source>NORTH-EAST</source>
         <translation>NORD-EST</translation>
     </message>
     <message>
-        <location filename="MyWindow.cpp" line="141"/>
+        <location filename="MyWindow.cpp" line="142"/>
         <source>SOUTH-EAST</source>
         <translation>SUD-EST</translation>
     </message>
     <message>
-        <location filename="MyWindow.cpp" line="142"/>
+        <location filename="MyWindow.cpp" line="143"/>
         <source>SOUTH-WEST</source>
         <translation>SUD-WEST</translation>
     </message>
     <message>
-        <location filename="MyWindow.cpp" line="144"/>
+        <location filename="MyWindow.cpp" line="145"/>
         <source>RECOMMENDED</source>
         <translation>RECOMMANDÉ</translation>
     </message>
@@ -118,7 +118,7 @@
     </message>
     <message>
         <location filename="MyWindow.cpp" line="27"/>
-        <location filename="MyWindow.cpp" line="154"/>
+        <location filename="MyWindow.cpp" line="155"/>
         <source>Confirm</source>
         <translation>Confirmer</translation>
     </message>
@@ -150,19 +150,86 @@
         <translation type="vanished">Les grands empires naissent de décisions importantes ! Êtes-vous un attaquant qui aime la compétition ? Ou votre disponibilité est plutôt faible ? Êtes-vous un joueur d&apos;équipe qui préfère créer une économie prospère ?</translation>
     </message>
     <message>
-        <location filename="resources.cpp" line="46"/>
         <source>resources</source>
-        <translation>ressources</translation>
+        <translation type="vanished">ressources</translation>
     </message>
     <message>
-        <location filename="resources.cpp" line="94"/>
+        <location filename="resources.cpp" line="98"/>
         <source>Production per hour</source>
         <translation>Production par heure</translation>
     </message>
     <message>
-        <location filename="resources.cpp" line="103"/>
+        <location filename="resources.cpp" line="107"/>
         <source>Troops</source>
         <translation>Troupes</translation>
+    </message>
+</context>
+<context>
+    <name>resources</name>
+    <message>
+        <location filename="resources.cpp" line="50"/>
+        <source>resources</source>
+        <translation>ressources</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="51"/>
+        <source>buildings</source>
+        <translation>centre du village</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="52"/>
+        <source>map</source>
+        <translation>carte</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="53"/>
+        <source>statistics</source>
+        <translation>statistiques</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="54"/>
+        <source>reports</source>
+        <translation>rapports</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="55"/>
+        <source>messages</source>
+        <translation>messages</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="81"/>
+        <source>warehouse</source>
+        <translation>dépôt de ressources</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="82"/>
+        <source>lumber</source>
+        <translation>bois</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="83"/>
+        <source>clay</source>
+        <translation>argile</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="84"/>
+        <source>iron</source>
+        <translation>fer</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="85"/>
+        <source>granary</source>
+        <translation>silo de céréales</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="86"/>
+        <source>crop</source>
+        <translation>céréales</translation>
+    </message>
+    <message>
+        <location filename="resources.cpp" line="108"/>
+        <source>hero</source>
+        <translation>héros</translation>
     </message>
 </context>
 </TS>

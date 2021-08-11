@@ -3,6 +3,7 @@
 
 #include "QStringPlus.h"
 #include "QPlus.h"
+#include "main.h"
 #include <QLabel>
 #include <QtGlobal>
 
@@ -21,7 +22,8 @@ class QHoverLabel : public QLabel
             QSize s = m_notHoverPixmap.size();
             setMaximumSize(s.width(), s.height()); // otherwise QLabel bounding box goes crazy
             //setAlignment(Qt::AlignTop); // only if removes setMaximumSize setAlignement works
-            setToolTip(QObject::tr(firstUppercase(/*path*/name).toStdString().c_str()));
+            //setToolTip(firstUppercase(QObject::tr(/*path*/name.toStdString().c_str())));
+            setToolTip(firstUppercase(translator.translate("resources", name.toStdString().c_str())));
         }
 
     protected:

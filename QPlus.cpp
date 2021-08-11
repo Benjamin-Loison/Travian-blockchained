@@ -1,4 +1,5 @@
 #include "QStringPlus.h"
+#include "main.h"
 #include "QPlus.h"
 
 QString assetsFolder = "assets/";
@@ -13,7 +14,7 @@ QPixmap getQPixmap(QString path)
     return QPixmap(assetsFolder + path);
 }
 
-QLabel* getQLabel(QString path, bool needPointingHandCursor, QString name)
+QLabel* getQLabel(QString path, bool needPointingHandCursor, QString name, QString context)
 {
     QLabel* qLabel = new QLabel;
     if(needPointingHandCursor)
@@ -22,7 +23,7 @@ QLabel* getQLabel(QString path, bool needPointingHandCursor, QString name)
         //qLabel->setAlignment(Qt::AlignTop);
         if(name == "")
             name = path;
-        qLabel->setToolTip(firstUppercase(QObject::tr(name.toStdString().c_str())));
+        qLabel->setToolTip(firstUppercase(context != "" ? translator.translate(context.toStdString().c_str(), name.toStdString().c_str()) : QObject::tr(name.toStdString().c_str())));
         path += ".png";
     }
     qLabel->setPixmap(getQPixmap(path));
