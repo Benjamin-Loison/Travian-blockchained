@@ -17,6 +17,7 @@ HEADERS += \
 TRANSLATIONS = travianblockchained_fr.ts
 
 DISTFILES += \
+    README.md \
     assets/banner.png \
     assets/buildings.png \
     assets/buildingsHover.png \
