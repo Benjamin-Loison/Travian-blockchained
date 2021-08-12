@@ -73,6 +73,8 @@ int main(int argc, char *argv[])
     return res;
 }
 
+// git ignore test
+
 QString getTribe(tribeEnum tribe)
 {
     switch(tribe)
