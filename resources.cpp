@@ -12,7 +12,7 @@
 //#define MYTR(x) QT_TRANSLATE_NOOP("resources", x)
 
 qint64 timestampVillageStart,
-       timestampGameRestored; // maybe can accumulate fraction of second errors
+       timestampGameClosed; // maybe can accumulate fraction of second errors
 
 quint32 resourcesProduction[] = {58, 52, 48, 56},
         resourcesAmount[] = {0, 0, 0, 0},
@@ -222,7 +222,7 @@ void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount)
 
 void updateResourcesAmount()
 {
-    double timeDelta = QDateTime::currentSecsSinceEpoch() - timestampGameRestored,
+    double timeDelta = QDateTime::currentSecsSinceEpoch() - timestampGameClosed,
            timeFraction = timeDelta / 3600;
     for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
     {

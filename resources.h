@@ -26,9 +26,9 @@ QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor,
        * getResource(QString name, quint32 amount);
 
 extern qint64 timestampVillageStart,
-              timestampGameRestored;
+              timestampGameClosed;
 
-// (not considering farm gathered while offline and loose some resources because for instance if was about to have 1 more lumber but restore then the "about to have 1 more lumber" is far)
+// (not considering farm gathered while offline and loose some resources because for instance if was about to have 1 more lumber but restore then the "about to have 1 more lumber" is far) - no more this problem with new system
 extern quint32 initialResourcesAmount[RESOURCES_NUMBER], // not mandatory here for 1D array to give array size ?
                resourcesAmount[RESOURCES_NUMBER];
 

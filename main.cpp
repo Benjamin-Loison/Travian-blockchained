@@ -12,6 +12,7 @@ MyWindow* window;
 QString nickname;
 
 // instead of linking README.md etc to be able to commit and push without forcing if added content directly through web interface, could just use a .gitignore no ? if so upload tools
+// gitignore doesn't seem to be the solution
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
         tribe = static_cast<enum tribeEnum>(settings.value("tribe").toUInt());
         nickname = settings.value("nickname").toString();
         timestampVillageStart = settings.value("timestampVillageStart").toUInt();
+        timestampGameClosed = settings.value("timestampGameClosed").toUInt(); // likewise we reduce
         for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
         {
             initialResourcesAmount[resourcesIndex] = settings.value("initialResources" + QString::number(resourcesIndex) + "Amount").toUInt();
@@ -40,6 +42,7 @@ int main(int argc, char *argv[])
         {
             farms[farmsIndex] = settings.value("farms" + QString::number(farmsIndex)).toUInt();
         }
+        updateResourcesAmount();
         window->startGame(true);
     }
     else
@@ -72,8 +75,6 @@ int main(int argc, char *argv[])
 
     return res;
 }
-
-// git ignore test
 
 QString getTribe(tribeEnum tribe)
 {

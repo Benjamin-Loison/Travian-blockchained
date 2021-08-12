@@ -277,12 +277,12 @@ void MyWindow::startGame(bool isRestoring)
     // should log in a file (settings.ini) every actions etc
     if(isRestoring)
     {
-        timestampGameRestored = QDateTime::currentSecsSinceEpoch();
+        //timestampGameRestored = QDateTime::currentSecsSinceEpoch();
     }
     else
     {
         timestampVillageStart = QDateTime::currentSecsSinceEpoch();
-        timestampGameRestored = timestampVillageStart;
+        timestampGameClosed = timestampVillageStart;
 
         // do C++ gives us that default array has null values ? - it seems
         farms[0] = 2;
