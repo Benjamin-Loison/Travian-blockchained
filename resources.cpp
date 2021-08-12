@@ -5,6 +5,7 @@
 #include "QHoverLabel.h"
 #include "QHoverPushButton.h"
 #include "resources.h"
+#include "buildings.h"
 #include "main.h"
 
 // this doesn't work as expected why ?!
@@ -55,7 +56,7 @@ quint16 farmsScreen[FARMS_NUMBER][2] = {
     {935, 424}
 };
 
-void setResourcesScreen(MyWindow* window)
+void setResourcesScreen(/*MyWindow* window*/)
 {
     QVBoxLayout* vbox = new QVBoxLayout,
                * qResourcesProductionTroopsVBox = new QVBoxLayout,
@@ -79,11 +80,12 @@ void setResourcesScreen(MyWindow* window)
 
     QString tabsAssets = "tabs/";
     QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources");
-    QPushButton* qBuildings = new QHoverPushButton(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings");
-    QLabel* qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
-          * qStatistics = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "statistics"), "statistics"),
-          * qReports = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "reports"), "reports"),
-          * qMessages = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "messages"), "messages");
+    //QPushButton* qBuildings = new QHoverPushButton(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings");
+    QHoverLabel* qBuildings = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings"),
+               * qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
+               * qStatistics = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "statistics"), "statistics"),
+               * qReports = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "reports"), "reports"),
+               * qMessages = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "messages"), "messages");
 
     qTopHBox->addStretch();
 
@@ -95,7 +97,9 @@ void setResourcesScreen(MyWindow* window)
     qTabsHBox->addWidget(qMessages);
 
     //connect(qBuildings, SIGNAL(clicked()), window, [](){setBuildingsScreen();});
-    QObject::connect(qBuildings, &QPushButton::clicked, [](){qDebug() << "am in...";});
+    //QObject::connect(qBuildings, &QPushButton::clicked, [](){qDebug() << "ya";});
+
+    QObject::connect(qBuildings, &QHoverLabel::clicked, [](){ setBuildingsScreen(); }); // doesn't work if qMap is just QLabel* type
 
     qTabsIcons->setLayout(qTabsHBox);
 
@@ -242,10 +246,10 @@ void updateResourcesAmount()
     cropAmount = initialCropAmount + cropProduction * timeFraction;
 }
 
-void updateScreen(MyWindow* window)
+void updateScreen(/*MyWindow* window*/)
 {
     updateResourcesAmount();
-    setResourcesScreen(window);
+    //setResourcesScreen(/*window*/);
     return;
 
     //return;

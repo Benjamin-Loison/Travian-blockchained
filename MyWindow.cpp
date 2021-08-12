@@ -29,6 +29,9 @@ MyWindow::MyWindow()
     vbox->addWidget(title);
     vbox->addWidget(paratext);
     vbox->addWidget(m_tabs);
+
+    vbox->addWidget(new QLineEdit("Test"));
+
     vbox->addWidget(confirmButton);
 
     QWidget* screen = new QWidget;
@@ -185,6 +188,15 @@ void MyWindow::setChooseLocationGUI()
     setCentralWidget(screen);
 }
 
+void drawBuilding(QPainter* painter, QString building, quint16 x, quint16 y, quint8 level)
+{
+    QString buildingsAssets = "buildings/" + getTribe() + "/";
+    QPixmap buildingPixmap = getQPixmap(buildingsAssets + building + ".png");
+    QSize buildingSize = buildingPixmap.size();
+    painter->drawPixmap(x, y, buildingPixmap);
+    drawCircle(painter, x + buildingSize.width() / 2, y + buildingSize.height() / 2, CIRCLE_SIZE, QString::number(level));
+}
+
 void MyWindow::manageBackground()
 {
     // this background while choosing tribe and location was initially a bug but it renders quite fine ^^
@@ -195,22 +207,25 @@ void MyWindow::manageBackground()
     QString villageAssets = "village/";
     QPixmap qBackgroundPixmap = getQPixmap(villageAssets + (screenView == SCREEN_VIEW_RESOURCES ? "resources" : "buildings") + "Background.jpg");
 
+    QPainter* painter = new QPainter(&qBackgroundPixmap);
     if(screenView == SCREEN_VIEW_RESOURCES)
     {
-        QPainter* painter = new QPainter(&qBackgroundPixmap);
-
         painter->drawPixmap(605, 193, getQPixmap(villageAssets + "resources3.png"));
         painter->drawPixmap(773, 298, getQPixmap(villageAssets + "village.png")); // should add tooltip in the future
 
-        quint16 circleSize = 25;
         for(quint8 farmsIndex = 0; farmsIndex < FARMS_NUMBER; farmsIndex++)
         {
-            drawCircle(painter, farmsScreen[farmsIndex][0], farmsScreen[farmsIndex][1], circleSize, QString::number(farms[farmsIndex]));
+            drawCircle(painter, farmsScreen[farmsIndex][0], farmsScreen[farmsIndex][1], CIRCLE_SIZE, QString::number(farms[farmsIndex]));
         }
         // might have troubles later because of different interfaces (on default one up crops circle is just not at the right place u_u)
 
-        painter->end();
     }
+    else if(screenView == SCREEN_VIEW_BUILDINGS)
+    {
+        drawBuilding(painter, "main building", 1070, 250, 1);
+        drawBuilding(painter, "rally point", 1350, 280, 1);
+    }
+    painter->end();
 
     qBackgroundPixmap = qBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio);
     QPalette palette;
@@ -249,7 +264,7 @@ void MyWindow::startGame()
     initialIronAmount = 750;
     initialCropAmount = 750;
 
-    setResourcesScreen(this);
+    setResourcesScreen(/*this*/);
     manageBackground();
 
     QTimer* timer = new QTimer();
@@ -260,6 +275,6 @@ void MyWindow::startGame()
 
 void MyWindow::refreshLoop()
 {
-    updateScreen(this);
+    updateScreen(/*this*/);
     //setResourcesScreen(this); // let's not assume + 1 each time in case of desync etc
 }

@@ -15,6 +15,7 @@ class MyWindow : public QMainWindow
 
     public:
         MyWindow();
+        void manageBackground();
 
     protected:
         void resizeEvent(QResizeEvent* evt) override;
@@ -26,8 +27,7 @@ class MyWindow : public QMainWindow
         void refreshLoop();
     private:
         void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
-             addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text),
-             manageBackground();
+             addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text);
         QTabWidget* m_tabs;
         QLabel* setTitle(QString title);
 };

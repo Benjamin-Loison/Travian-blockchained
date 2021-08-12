@@ -26,7 +26,16 @@ class QHoverLabel : public QLabel
             setToolTip(firstUppercase(translator.translate("resources", name.toStdString().c_str())));
         }
 
+    // https://wiki.qt.io/Clickable_QLabel
+    signals:
+        void clicked();
+
     protected:
+        void mousePressEvent(QMouseEvent* event) override
+        {
+            emit clicked();
+        }
+
         void enterEvent(QEnterEvent* ev) override
         {
             setPixmap(m_hoverPixmap);

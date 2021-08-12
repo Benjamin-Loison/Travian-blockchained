@@ -62,9 +62,12 @@ void drawCircle(QPainter* painter, quint16 centerX, quint16 centerY, quint16 cir
     painter->setPen(greenPen);
     painter->drawEllipse(greenRect);
 
-    painter->setPen(defaultPen);
-    QSize textSize = QFontMetrics(painter->font()).size(Qt::TextSingleLine, text);
-    unsigned short textWidthDiv2 = textSize.width(),
-                   textHeightDiv2 = textSize.height();
-    painter->drawText(centerX + textWidthDiv2 * 1.4, centerY + textHeightDiv2, text); // why this factor ?
+    if(text != "0")
+    {
+        painter->setPen(defaultPen);
+        QSize textSize = QFontMetrics(painter->font()).size(Qt::TextSingleLine, text);
+        unsigned short textWidthDiv2 = textSize.width(),
+                       textHeightDiv2 = textSize.height();
+        painter->drawText(centerX + textWidthDiv2 * 1.4, centerY + textHeightDiv2, text); // why this factor ?
+    }
 }
