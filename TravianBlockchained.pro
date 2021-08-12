@@ -10,6 +10,7 @@ QT+=widgets
 HEADERS += \
     MyWindow.h \
     QHoverLabel.h \
+    QHoverPushButton.h \
     QPlus.h \
     QStringPlus.h \
     buildings.h \

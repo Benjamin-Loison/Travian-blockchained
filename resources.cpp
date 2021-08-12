@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include "QPlus.h"
 #include "QHoverLabel.h"
+#include "QHoverPushButton.h"
 #include "resources.h"
 #include "main.h"
 
@@ -77,9 +78,9 @@ void setResourcesScreen(MyWindow* window)
     // tabs icons
 
     QString tabsAssets = "tabs/";
-    QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources"),
-          * qBuildings = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings"),
-          * qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
+    QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources");
+    QPushButton* qBuildings = new QHoverPushButton(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings");
+    QLabel* qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
           * qStatistics = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "statistics"), "statistics"),
           * qReports = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "reports"), "reports"),
           * qMessages = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "messages"), "messages");
@@ -94,8 +95,7 @@ void setResourcesScreen(MyWindow* window)
     qTabsHBox->addWidget(qMessages);
 
     //connect(qBuildings, SIGNAL(clicked()), window, [](){setBuildingsScreen();});
-    //connect(qBuildings, &QPushButton::clicked,
-    //    [](QTextEdit te, QString s){qDebug() << "am in...";});
+    QObject::connect(qBuildings, &QPushButton::clicked, [](){qDebug() << "am in...";});
 
     qTabsIcons->setLayout(qTabsHBox);
 
