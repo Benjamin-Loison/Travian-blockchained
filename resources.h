@@ -6,6 +6,13 @@
 #define FARMS_NUMBER 18
 #define CIRCLE_SIZE 25
 
+#define RESOURCES_NUMBER 4
+
+#define LUMBER 0
+#define CLAY 1
+#define IRON 2
+#define CROP 3
+
 void setResourcesScreen(/*MyWindow* window*/),
      addResourceCapacity(QHBoxLayout* hbox, QString name, quint32 capacity),
      addResource(QHBoxLayout* hbox, QString name, quint32 amount),
@@ -21,10 +28,11 @@ QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor,
 extern qint64 timestampVillageStart,
               timestampGameRestored;
 
-extern quint32 initialLumberAmount,
+/*extern quint32 initialLumberAmount,
                initialClayAmount,
                initialIronAmount,
-               initialCropAmount;
+               initialCropAmount;*/
+extern quint32 initialResourcesAmount[RESOURCES_NUMBER]; // not mandatory here for 1D array to give array size ?
 
 extern quint8 farms[FARMS_NUMBER];
 extern quint16 farmsScreen[FARMS_NUMBER][2];

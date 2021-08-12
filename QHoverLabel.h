@@ -33,16 +33,22 @@ class QHoverLabel : public QLabel
     protected:
         void mousePressEvent(QMouseEvent* event) override
         {
+            Q_UNUSED(event) // can't do another way ?
+
             emit clicked();
         }
 
         void enterEvent(QEnterEvent* ev) override
         {
+            Q_UNUSED(ev)
+
             setPixmap(m_hoverPixmap);
             //QLabel::enterEvent(ev);
         }
         void leaveEvent(QEvent* ev) override
         {
+            Q_UNUSED(ev)
+
             setPixmap(m_notHoverPixmap);
         }
 

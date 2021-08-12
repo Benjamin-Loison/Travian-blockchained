@@ -15,7 +15,8 @@ class MyWindow : public QMainWindow
 
     public:
         MyWindow();
-        void manageBackground();
+        void manageBackground(),
+             setChooseTribeGUI();
 
     protected:
         void resizeEvent(QResizeEvent* evt) override;
@@ -23,13 +24,15 @@ class MyWindow : public QMainWindow
     public slots:
         void setChooseLocationGUI();
         void chooseLocation();
-        void startGame(); // can't use a single void for all slots :'(
+        void startGame(bool isRestoring = false); // can't use a single void for all slots :'(
         void refreshLoop();
     private:
         void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
              addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text);
+        void keyPressEvent(QKeyEvent* pe) override;
         QTabWidget* m_tabs;
         QLabel* setTitle(QString title);
+        QLineEdit* nicknameLineEdit;
 };
 
 

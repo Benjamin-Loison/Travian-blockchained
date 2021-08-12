@@ -11,6 +11,7 @@ extern screenViewEnum screenView;
 extern tribeEnum tribe;
 extern QTranslator translator;
 extern MyWindow* window;
+extern QString nickname;
 
 QString getTribe();
 

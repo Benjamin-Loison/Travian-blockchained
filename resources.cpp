@@ -14,7 +14,7 @@
 qint64 timestampVillageStart,
        timestampGameRestored; // maybe can accumulate fraction of second errors
 
-quint32 lumberProduction = 58, // should use an array ?
+/*quint32 lumberProduction = 58, // should use an array ?
         clayProduction = 52,
         ironProduction = 48,
         cropProduction = 56,
@@ -27,7 +27,13 @@ quint32 lumberProduction = 58, // should use an array ?
         initialLumberAmount = 0,
         initialClayAmount = 0,
         initialIronAmount = 0,
-        initialCropAmount = 0;
+        initialCropAmount = 0;*/
+
+quint32 resourcesProduction[] = {58, 52, 48, 56},
+        resourcesAmount[] = {0, 0, 0, 0},
+        initialResourcesAmount[] = {0, 0, 0, 0};
+
+QString resourcesNames[] = {"lumber", "clay", "iron", "crop"};
 
 quint8 farms[FARMS_NUMBER];
 
@@ -171,7 +177,7 @@ QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor,
     QWidget* resourceCapacity = new QWidget;
     QHBoxLayout* resourceCapacityHBox = new QHBoxLayout;
 
-    resourceCapacityHBox->addWidget(getQLabel("resources/" + name, true, name));
+    resourceCapacityHBox->addWidget(getQLabel("resources/" + name, true, name, "resources"));
     QLabel* qLabel = new QLabel(std::to_string(capacity).c_str());
     //qLabel->setFont(QFont("Impact", 12));
 

@@ -11,10 +11,13 @@ MyWindow::MyWindow()
 {
     //setFixedSize(200, 100);
 
-    screenView = SCREEN_VIEW_SELECT_TRIBE;
-
     setWindowIcon(getQIcon("travian.png"));
     setWindowTitle("Travian blockchained");
+}
+
+void MyWindow::setChooseTribeGUI()
+{
+    screenView = SCREEN_VIEW_SELECT_TRIBE;
 
     QVBoxLayout* vbox = new QVBoxLayout;
     QLabel* title = setTitle(tr("Select your tribe")),
@@ -25,12 +28,21 @@ MyWindow::MyWindow()
     m_tabs->setGeometry(30, 20, 240, 160);
 
     QPushButton* confirmButton = new QPushButton(tr("Confirm"));
+    //confirmButton->setAutoDefault(false);
+    //confirmButton->setDefault(true);
 
     vbox->addWidget(title);
     vbox->addWidget(paratext);
     vbox->addWidget(m_tabs);
 
-    vbox->addWidget(new QLineEdit("Test"));
+    QWidget* nicknameSelection = new QWidget;
+    QHBoxLayout* hbox = new QHBoxLayout;
+    hbox->addWidget(new QLabel(tr("Nickname:")));
+    nicknameLineEdit = new QLineEdit("");
+    hbox->addWidget(nicknameLineEdit);
+    hbox->addStretch();
+    nicknameSelection->setLayout(hbox);
+    vbox->addWidget(nicknameSelection);
 
     vbox->addWidget(confirmButton);
 
@@ -38,11 +50,25 @@ MyWindow::MyWindow()
     screen->setLayout(vbox);
     setCentralWidget(screen);
 
+    //QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_Enter), screen);
+    //connect(shortcut, SIGNAL(activated()), this, SLOT(setChooseLocationGUI()));
+
     connect(confirmButton, SIGNAL(clicked()), this, SLOT(setChooseLocationGUI()));
 
     addTribe(QT_TR_NOOP("gauls"), "phalanx", tr("Low time requirements"), tr("Loot protection and good defense"), tr("Excellent, fast cavalry"), tr("Well suited to new players"));
     addTribe(QT_TR_NOOP("romans"), "legionnaire", tr("Moderate time requirements"), tr("Can develop villages the fastest"), tr("Very strong but expensive troops"), tr("Hard to play for new players"));
     addTribe(QT_TR_NOOP("teutons"), "clubswinger", tr("High time requirements"), tr("Good at looting in early game"), tr("Strong, cheap infantry"), tr("For aggressive players"));
+}
+
+void MyWindow::keyPressEvent(QKeyEvent* pe)
+{
+    if(pe->key() == Qt::Key_Return)
+    {
+        if(screenView == SCREEN_VIEW_SELECT_TRIBE)
+            setChooseLocationGUI();
+        else if(screenView == SCREEN_VIEW_SELECT_LOCATION)
+            startGame();
+    }
 }
 
 QLabel* MyWindow::setTitle(QString title)
@@ -55,6 +81,8 @@ QLabel* MyWindow::setTitle(QString title)
 
 void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended)
 {
+    Q_UNUSED(recommended)
+
     QWidget* tab = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout;
 
@@ -108,6 +136,16 @@ void drawTextCentered(QPainter* painter, unsigned short x, unsigned short y, QSt
 
 void MyWindow::setChooseLocationGUI()
 {
+    QString nicknameTmp = nicknameLineEdit->text();
+    //qInfo(nickname.toStdString().c_str());
+    // should check if nickname already used
+    if(nicknameTmp == "") // could check for ascii ? or let's accept UTF8 ? - just ban emots ?
+    {
+        QMessageBox::warning(this, tr("Invalid nickname"), tr("Your nickname can't be empty"));
+        return;
+    }
+    nickname = nicknameTmp;
+
     screenView = SCREEN_VIEW_SELECT_LOCATION;
 
     QWidget* oldScreen = centralWidget();
@@ -246,13 +284,21 @@ void MyWindow::chooseLocation()
     QMessageBox::information(this, "Titre de la fenêtre", "Choosed location !");
 }
 
-void MyWindow::startGame()
+void MyWindow::startGame(bool isRestoring)
 {
     screenView = SCREEN_VIEW_RESOURCES;
     //QMessageBox::information(this, "Titre de la fenêtre", "Bonjour et bienvenueà tous les Zéros !");
 
-    timestampVillageStart = QDateTime::currentSecsSinceEpoch();
-    timestampGameRestored = timestampVillageStart;
+    // should log in a file every actions etc
+    if(isRestoring)
+    {
+        timestampGameRestored = QDateTime::currentSecsSinceEpoch();
+    }
+    else
+    {
+        timestampVillageStart = QDateTime::currentSecsSinceEpoch();
+        timestampGameRestored = timestampVillageStart;
+    }
 
     // do C++ gives us that default array has null values ?
     farms[0] = 2;

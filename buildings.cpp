@@ -8,6 +8,7 @@ void setBuildingsScreen(/*MyWindow* window*/)
     //window->update();
     window->manageBackground();
     //qInfo("got damn");
+    return;
     QWidget* screen = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout,
                * playersTabVBox = new QVBoxLayout;

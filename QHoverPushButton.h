@@ -26,11 +26,15 @@ class QHoverPushButton : public QPushButton
     protected:
         void focusInEvent(QFocusEvent* e) override
         {
+            Q_UNUSED(e)
+
             setIcon(m_hoverIcon);
             //QLabel::enterEvent(ev);
         }
         void focusOutEvent(QFocusEvent* e) override
         {
+            Q_UNUSED(e)
+
             setIcon(m_notHoverIcon);
         }
 
