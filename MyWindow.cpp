@@ -107,6 +107,32 @@ void MyWindow::setChooseLocationGUI()
 {
     screenView = SCREEN_VIEW_SELECT_LOCATION;
 
+    QWidget* oldScreen = centralWidget();
+    QLayout* layout = oldScreen->layout();
+    QLayoutItem* tabsItem = layout->itemAt(2);
+    QTabWidget* tabs = (QTabWidget*)tabsItem->widget(); // maybe the thing missing in refreshLoop is casting ?
+    quint8 tabsIndex = tabs->currentIndex();
+    switch(tabsIndex)
+    {
+        case 0:
+            tribe = TRIBE_GAULS;
+            break;
+        case 1:
+            tribe = TRIBE_ROMANS;
+            break;
+        case 2:
+            tribe = TRIBE_TEUTONS;
+            break;
+    }
+
+    /*QString tabName = tabs->currentWidget()->objectName();
+    qInfo("ho0");
+    qInfo(tabName.toStdString().c_str()); // nothing
+    qInfo("ho1");*/
+    //qInfo(std::to_string(tabsIndex).c_str());
+
+    // QTabWidget 2 layout
+
     QWidget* screen = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout;
     QLabel* title = setTitle(tr("Select your starting position")), // could make a macro ^^
@@ -167,13 +193,24 @@ void MyWindow::manageBackground()
         return;
     }
     QString villageAssets = "village/";
-    QPixmap qBackgroundPixmap = getQPixmap(villageAssets + "resourcesBackground.jpg");
-    QPainter* painter = new QPainter(&qBackgroundPixmap);
+    QPixmap qBackgroundPixmap = getQPixmap(villageAssets + (screenView == SCREEN_VIEW_RESOURCES ? "resources" : "buildings") + "Background.jpg");
 
-    painter->drawPixmap(605, 193, getQPixmap(villageAssets + "resources3.png"));
-    painter->drawPixmap(773, 298, getQPixmap(villageAssets + "village.png")); // should add tooltip in the future
+    if(screenView == SCREEN_VIEW_RESOURCES)
+    {
+        QPainter* painter = new QPainter(&qBackgroundPixmap);
 
-    painter->end();
+        painter->drawPixmap(605, 193, getQPixmap(villageAssets + "resources3.png"));
+        painter->drawPixmap(773, 298, getQPixmap(villageAssets + "village.png")); // should add tooltip in the future
+
+        quint16 circleSize = 25;
+        for(quint8 farmsIndex = 0; farmsIndex < FARMS_NUMBER; farmsIndex++)
+        {
+            drawCircle(painter, farmsScreen[farmsIndex][0], farmsScreen[farmsIndex][1], circleSize, QString::number(farms[farmsIndex]));
+        }
+        // might have troubles later because of different interfaces (on default one up crops circle is just not at the right place u_u)
+
+        painter->end();
+    }
 
     qBackgroundPixmap = qBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio);
     QPalette palette;
@@ -201,6 +238,16 @@ void MyWindow::startGame()
 
     timestampVillageStart = QDateTime::currentSecsSinceEpoch();
     timestampGameRestored = timestampVillageStart;
+
+    // do C++ gives us that default array has null values ?
+    farms[0] = 2;
+    farms[1] = 2;
+    farms[4] = 1;
+
+    initialLumberAmount = 750;
+    initialClayAmount = 750;
+    initialIronAmount = 750;
+    initialCropAmount = 750;
 
     setResourcesScreen(this);
     manageBackground();

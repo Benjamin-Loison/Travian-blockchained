@@ -4,7 +4,10 @@
 #include "main.h"
 
 screenViewEnum screenView;
+tribeEnum tribe;
 QTranslator translator;
+
+// instead of linking README.md etc to be able to commit and push without forcing if added content directly through web interface, could just use a .gitignore no ? if so upload tools
 
 int main(int argc, char *argv[])
 {

@@ -48,14 +48,12 @@ void setColor(QWidget* qWidget, QColor backgroundColor, QColor foregroundColor)
     qWidget->setPalette(palette);*/
 }
 
-void drawCircle(quint16 centerX, quint16 centerY, quint16 circleSize)
+void drawCircle(QPainter* painter, quint16 centerX, quint16 centerY, quint16 circleSize, QString text)
 {
-    QRectF
-           greenRect(centerX, centerY, circleSize, circleSize);
-    /*QPen whitePen = QPen(Qt::white);
-    whitePen.setWidth(circleSize);
-    painter->setPen(whitePen);
-    painter->drawEllipse(whiteRect);*/
+    quint16 circleSizeDiv2 = circleSize / 2;
+    centerX -= circleSizeDiv2;
+    centerY -= circleSizeDiv2;
+    QRectF greenRect(centerX, centerY, circleSize, circleSize);
     QColor buildingGreen = QColor(192, 226, 72);
     QPen greenPen = QPen(buildingGreen),
          defaultPen = painter->pen();
@@ -65,7 +63,6 @@ void drawCircle(quint16 centerX, quint16 centerY, quint16 circleSize)
     painter->drawEllipse(greenRect);
 
     painter->setPen(defaultPen);
-    QString text = "1";
     QSize textSize = QFontMetrics(painter->font()).size(Qt::TextSingleLine, text);
     unsigned short textWidthDiv2 = textSize.width(),
                    textHeightDiv2 = textSize.height();

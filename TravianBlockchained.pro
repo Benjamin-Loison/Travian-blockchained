@@ -2,6 +2,7 @@ SOURCES += \
     MyWindow.cpp \
     QPlus.cpp \
     QStringPlus.cpp \
+    buildings.cpp \
     main.cpp \
     resources.cpp
 QT+=widgets
@@ -11,6 +12,7 @@ HEADERS += \
     QHoverLabel.h \
     QPlus.h \
     QStringPlus.h \
+    buildings.h \
     main.h \
     resources.h
 

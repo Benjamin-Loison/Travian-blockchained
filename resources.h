@@ -3,6 +3,8 @@
 
 #include "MyWindow.h"
 
+#define FARMS_NUMBER 18
+
 void setResourcesScreen(MyWindow* window),
      addResourceCapacity(QHBoxLayout* hbox, QString name, quint32 capacity),
      addResource(QHBoxLayout* hbox, QString name, quint32 amount),
@@ -17,5 +19,13 @@ QWidget* getResourceInfo(QString name, quint32 capacity, QColor backgroundColor,
 
 extern qint64 timestampVillageStart,
               timestampGameRestored;
+
+extern quint32 initialLumberAmount,
+               initialClayAmount,
+               initialIronAmount,
+               initialCropAmount;
+
+extern quint8 farms[FARMS_NUMBER];
+extern quint16 farmsScreen[FARMS_NUMBER][2];
 
 #endif

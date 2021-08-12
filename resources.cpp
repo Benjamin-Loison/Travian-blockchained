@@ -27,6 +27,33 @@ quint32 lumberProduction = 58, // should use an array ?
         initialIronAmount = 0,
         initialCropAmount = 0;
 
+quint8 farms[FARMS_NUMBER];
+
+quint16 farmsScreen[FARMS_NUMBER][2] = {
+    {738, 214},
+    {850, 219},
+    {935, 230},
+
+    {700, 258},
+    {825, 270},
+    {877, 276},
+    {972, 283},
+
+    {655, 311},
+    {717, 308},
+    {950, 306},
+    {1003, 300},
+
+    {650, 366},
+    {717, 353},
+    {977, 365},
+    {839, 389},
+
+    {747, 443},
+    {847, 438},
+    {935, 424}
+};
+
 void setResourcesScreen(MyWindow* window)
 {
     QVBoxLayout* vbox = new QVBoxLayout,
@@ -46,6 +73,9 @@ void setResourcesScreen(MyWindow* window)
            * qResourcesProductionTroopsForBox = new QWidget,
            * qResourcesProduction = new QWidget,
            * qTroops = new QWidget;
+
+    // tabs icons
+
     QString tabsAssets = "tabs/";
     QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources"),
           * qBuildings = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings"),
@@ -54,7 +84,6 @@ void setResourcesScreen(MyWindow* window)
           * qReports = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "reports"), "reports"),
           * qMessages = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "messages"), "messages");
 
-    // tabs icons
     qTopHBox->addStretch();
 
     qTabsHBox->addWidget(qResources);
@@ -63,6 +92,10 @@ void setResourcesScreen(MyWindow* window)
     qTabsHBox->addWidget(qStatistics);
     qTabsHBox->addWidget(qReports);
     qTabsHBox->addWidget(qMessages);
+
+    //connect(qBuildings, SIGNAL(clicked()), window, [](){setBuildingsScreen();});
+    //connect(qBuildings, &QPushButton::clicked,
+    //    [](QTextEdit te, QString s){qDebug() << "am in...";});
 
     qTabsIcons->setLayout(qTabsHBox);
 
