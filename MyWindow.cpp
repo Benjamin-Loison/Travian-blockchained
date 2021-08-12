@@ -172,6 +172,7 @@ void MyWindow::manageBackground()
 
     painter->drawPixmap(605, 193, getQPixmap(villageAssets + "resources3.png"));
     painter->drawPixmap(773, 298, getQPixmap(villageAssets + "village.png")); // should add tooltip in the future
+
     painter->end();
 
     qBackgroundPixmap = qBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio);

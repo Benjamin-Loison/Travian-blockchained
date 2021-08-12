@@ -47,3 +47,27 @@ void setColor(QWidget* qWidget, QColor backgroundColor, QColor foregroundColor)
         palette.setColor(qWidget->foregroundRole(), foregroundColor);
     qWidget->setPalette(palette);*/
 }
+
+void drawCircle(quint16 centerX, quint16 centerY, quint16 circleSize)
+{
+    QRectF
+           greenRect(centerX, centerY, circleSize, circleSize);
+    /*QPen whitePen = QPen(Qt::white);
+    whitePen.setWidth(circleSize);
+    painter->setPen(whitePen);
+    painter->drawEllipse(whiteRect);*/
+    QColor buildingGreen = QColor(192, 226, 72);
+    QPen greenPen = QPen(buildingGreen),
+         defaultPen = painter->pen();
+    greenPen.setWidth(3);
+    painter->setBrush(Qt::white);
+    painter->setPen(greenPen);
+    painter->drawEllipse(greenRect);
+
+    painter->setPen(defaultPen);
+    QString text = "1";
+    QSize textSize = QFontMetrics(painter->font()).size(Qt::TextSingleLine, text);
+    unsigned short textWidthDiv2 = textSize.width(),
+                   textHeightDiv2 = textSize.height();
+    painter->drawText(centerX + textWidthDiv2 * 1.4, centerY + textHeightDiv2, text); // why this factor ?
+}
