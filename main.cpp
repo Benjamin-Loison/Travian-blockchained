@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
     else
         qInfo("languageFile couldn't be loaded !"); // how to inject languageFile value ?
 
-    // the "Ready to rule the world ?" GUI won't be designed because it's useless (at least I consider it as useless)
-
     window = new MyWindow();
     QString settingsFile = "settings.ini";
     if(QFile::exists(settingsFile))
@@ -50,20 +48,16 @@ int main(int argc, char *argv[])
 
     window->show();
 
-    //qInfo("before");
-
     int res = app.exec();
 
-    //qInfo("after");
-
-    // help multiaccount ? let say no for the moment
     if(screenView != SCREEN_VIEW_SELECT_LOCATION && screenView != SCREEN_VIEW_SELECT_TRIBE) // could also make "steps" if close during create account process
     {
         QSettings settings(settingsFile, QSettings::IniFormat);
         settings.setValue("timestampGameClosed", QVariant(QDateTime::currentSecsSinceEpoch()));
         for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
         {
-            settings.setValue("initialResources" + QString::number(resourcesIndex) + "Amount", QVariant(/*initialResourcesAmount*/resourcesAmount[resourcesIndex])); // could only save non null values and when loading could give default value if not found
+            // could only save non null values and when loading could give default value if not found
+            settings.setValue("initialResources" + QString::number(resourcesIndex) + "Amount", QVariant(resourcesAmount[resourcesIndex]));
         }
         for(quint8 farmsIndex = 0; farmsIndex < FARMS_NUMBER; farmsIndex++)
         {
@@ -87,8 +81,7 @@ QString getTribe(tribeEnum tribe)
             return "gauls";
         case TRIBE_ROMANS:
             return "romans";
-        //case TRIBE_TEUTONS:
-        default:
+        default: // case TRIBE_TEUTONS:
             return "teutons";
     }
 }

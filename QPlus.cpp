@@ -20,7 +20,6 @@ QLabel* getQLabel(QString path, bool needPointingHandCursor, QString name, QStri
     if(needPointingHandCursor)
     {
         qLabel->setCursor(Qt::PointingHandCursor);
-        //qLabel->setAlignment(Qt::AlignTop);
         if(name == "")
             name = path;
         qLabel->setToolTip(firstUppercase(context != "" ? translator.translate(context.toStdString().c_str(), name.toStdString().c_str()) : QObject::tr(name.toStdString().c_str())));
@@ -40,12 +39,6 @@ void setColor(QWidget* qWidget, QColor backgroundColor, QColor foregroundColor)
         pal.setColor(qWidget->foregroundRole(), foregroundColor);
     }
     qWidget->setPalette(pal);
-
-    /*QPalette palette = qWidget->palette();
-    palette.setColor(qWidget->backgroundRole(), backgroundColor);
-    if(foregroundColor != QColor())
-        palette.setColor(qWidget->foregroundRole(), foregroundColor);
-    qWidget->setPalette(palette);*/
 }
 
 void drawCircle(QPainter* painter, quint16 centerX, quint16 centerY, quint16 circleSize, QString text)

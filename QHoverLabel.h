@@ -17,12 +17,9 @@ class QHoverLabel : public QLabel
             m_notHoverPixmap = getQPixmap(path + ".png");
             m_hoverPixmap = getQPixmap(path + "Hover.png");
             setCursor(Qt::PointingHandCursor);
-            //setScaledContents(true);
             setPixmap(m_notHoverPixmap);
             QSize s = m_notHoverPixmap.size();
             setMaximumSize(s.width(), s.height()); // otherwise QLabel bounding box goes crazy
-            //setAlignment(Qt::AlignTop); // only if removes setMaximumSize setAlignement works
-            //setToolTip(firstUppercase(QObject::tr(/*path*/name.toStdString().c_str())));
             setToolTip(firstUppercase(translator.translate("resources", name.toStdString().c_str())));
         }
 

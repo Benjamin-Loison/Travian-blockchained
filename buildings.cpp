@@ -2,12 +2,11 @@
 #include "QPlus.h"
 #include "buildings.h"
 
-void setBuildingsScreen(/*MyWindow* window*/)
+void setBuildingsScreen()
 {
     screenView = SCREEN_VIEW_BUILDINGS;
     //window->update();
     window->manageBackground();
-    //qInfo("got damn");
     return;
     QWidget* screen = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout,
@@ -25,7 +24,7 @@ void setBuildingsScreen(/*MyWindow* window*/)
 
     playersGrid->addWidget(new QLabel(QString::number(1) + "."), 1, 0);
     playersGrid->addWidget(getQLabel("tribes/gauls medium.png"), 1, 1);
-    playersGrid->addWidget(new QLabel("Benjamin Loison"), 1, 2); // add a lineedit somewhere to get when creating account his nickname
+    playersGrid->addWidget(new QLabel("Benjamin Loison"), 1, 2);
     playersGrid->addWidget(new QLabel("-"), 1, 3);
     playersGrid->addWidget(new QLabel(QString::number(8)), 1, 4);
     playersGrid->addWidget(new QLabel(QString::number(1)), 1, 5);

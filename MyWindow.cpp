@@ -28,8 +28,6 @@ void MyWindow::setChooseTribeGUI()
     m_tabs->setGeometry(30, 20, 240, 160);
 
     QPushButton* confirmButton = new QPushButton(tr("Confirm"));
-    //confirmButton->setAutoDefault(false);
-    //confirmButton->setDefault(true);
 
     vbox->addWidget(title);
     vbox->addWidget(paratext);
@@ -49,9 +47,6 @@ void MyWindow::setChooseTribeGUI()
     QWidget* screen = new QWidget;
     screen->setLayout(vbox);
     setCentralWidget(screen);
-
-    //QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_Enter), screen);
-    //connect(shortcut, SIGNAL(activated()), this, SLOT(setChooseLocationGUI()));
 
     connect(confirmButton, SIGNAL(clicked()), this, SLOT(setChooseLocationGUI()));
 
@@ -109,9 +104,9 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
 void MyWindow::addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text)
 {
     QWidget* qLine = new QWidget;
-    QLabel* qText = new QLabel(text), // it's sad that tr here doesn't work "as expected"
+    QLabel* qText = new QLabel(text),
           * qIcon = new QLabel();
-    qIcon->setPixmap(getQPixmap("troops/" + tribeName + "/" + troopName + ".png")); // there is maybe a way to directly make a picture but I'm learning Qt, be kind
+    qIcon->setPixmap(getQPixmap("troops/" + tribeName + "/" + troopName + ".png"));
 
     QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(qIcon);
@@ -137,7 +132,6 @@ void drawTextCentered(QPainter* painter, unsigned short x, unsigned short y, QSt
 void MyWindow::setChooseLocationGUI()
 {
     QString nicknameTmp = nicknameLineEdit->text();
-    //qInfo(nickname.toStdString().c_str());
     // should check if nickname already used
     if(nicknameTmp == "") // could check for ascii ? or let's accept UTF8 ? - just ban emots ?
     {
@@ -166,12 +160,6 @@ void MyWindow::setChooseLocationGUI()
             break;
     }
 
-    /*QString tabName = tabs->currentWidget()->objectName();
-    qInfo("ho0");
-    qInfo(tabName.toStdString().c_str()); // nothing
-    qInfo("ho1");*/
-    //qInfo(std::to_string(tabsIndex).c_str());
-
     // QTabWidget 2 layout
 
     QWidget* screen = new QWidget;
@@ -185,7 +173,7 @@ void MyWindow::setChooseLocationGUI()
     QLabel* qIcon = new QLabel();
 
     QString locationsFolder = "locations/";
-    QPixmap map = getQPixmap(locationsFolder + "locations.png"), // map already used
+    QPixmap map = getQPixmap(locationsFolder + "locations.png"),
             banner = getQPixmap(locationsFolder + "banner.png");
 
     QPixmap* mapPtr = &map; // don't need any free ? ^^'
@@ -211,12 +199,12 @@ void MyWindow::setChooseLocationGUI()
 
     drawTextCentered(painter, x + 9, y + bannerHeight + 5,  tr("RECOMMENDED"), true);
 
-    painter->end(); // otherwise there is an error in logs
+    painter->end();
 
     qIcon->setPixmap(map);
     qIcon->setAlignment(Qt::AlignCenter);
     qIcon->setCursor(Qt::PointingHandCursor);
-    //connect(qIcon, SIGNAL(clicked()), this, SLOT(chooseLocation())); // TODO: not that easy
+    //connect(qIcon, SIGNAL(clicked()), this, SLOT(chooseLocation())); // TODO: not that easy - with an icon we can get where the guy clicked it seems
     vbox->addWidget(qIcon);
 
     QPushButton* confirmButton = new QPushButton(tr("Confirm"));
@@ -237,7 +225,6 @@ void drawBuilding(QPainter* painter, QString building, quint16 x, quint16 y, qui
 
 void MyWindow::manageBackground()
 {
-    // this background while choosing tribe and location was initially a bug but it renders quite fine ^^
     if(screenView == SCREEN_VIEW_SELECT_TRIBE || screenView == SCREEN_VIEW_SELECT_LOCATION)
     {
         return;
@@ -269,7 +256,6 @@ void MyWindow::manageBackground()
     QPalette palette;
     palette.setBrush(QPalette::Window, qBackgroundPixmap);
     setPalette(palette);
-    //setAutoFillBackground(true);
 }
 
 void MyWindow::resizeEvent(QResizeEvent* evt)
@@ -287,9 +273,8 @@ void MyWindow::chooseLocation()
 void MyWindow::startGame(bool isRestoring)
 {
     screenView = SCREEN_VIEW_RESOURCES;
-    //QMessageBox::information(this, "Titre de la fenêtre", "Bonjour et bienvenueà tous les Zéros !");
 
-    // should log in a file every actions etc
+    // should log in a file (settings.ini) every actions etc
     if(isRestoring)
     {
         timestampGameRestored = QDateTime::currentSecsSinceEpoch();
@@ -310,7 +295,7 @@ void MyWindow::startGame(bool isRestoring)
         }
     }
 
-    setResourcesScreen(/*this*/);
+    setResourcesScreen();
     manageBackground();
 
     QTimer* timer = new QTimer();
@@ -321,6 +306,6 @@ void MyWindow::startGame(bool isRestoring)
 
 void MyWindow::refreshLoop()
 {
-    updateScreen(/*this*/);
-    //setResourcesScreen(this); // let's not assume + 1 each time in case of desync etc
+    updateScreen();
+    //setResourcesScreen(); // let's not assume + 1 each time in case of desync etc
 }

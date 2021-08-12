@@ -1,7 +1,6 @@
 #include <QWidget>
 #include "QStringPlus.h"
 
-// this should be in Qt by default u_u
 QString firstUppercase(QString s)
 {
     s[0] = s[0].toTitleCase();

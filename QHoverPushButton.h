@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QtGlobal>
 
+// copied from QHoverLabel
+
 class QHoverPushButton : public QPushButton
 {
     Q_OBJECT
@@ -18,7 +20,7 @@ class QHoverPushButton : public QPushButton
             m_hoverIcon = getQIcon(path + "Hover.png");
             setCursor(Qt::PointingHandCursor);
             setIcon(m_notHoverIcon);
-            //QSize s = m_notHoverIcon.size();
+            //QSize s = m_notHoverIcon.size(); // doesn't work because it's an icon
             //setMaximumSize(s.width(), s.height());
             setToolTip(firstUppercase(translator.translate("resources", name.toStdString().c_str())));
         }
@@ -29,7 +31,6 @@ class QHoverPushButton : public QPushButton
             Q_UNUSED(e)
 
             setIcon(m_hoverIcon);
-            //QLabel::enterEvent(ev);
         }
         void focusOutEvent(QFocusEvent* e) override
         {

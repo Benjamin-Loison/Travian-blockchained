@@ -14,21 +14,6 @@
 qint64 timestampVillageStart,
        timestampGameRestored; // maybe can accumulate fraction of second errors
 
-/*quint32 lumberProduction = 58, // should use an array ?
-        clayProduction = 52,
-        ironProduction = 48,
-        cropProduction = 56,
-
-        lumberAmount = 0, // 750 all by default
-        clayAmount = 0,
-        ironAmount = 0,
-        cropAmount = 0,
-
-        initialLumberAmount = 0,
-        initialClayAmount = 0,
-        initialIronAmount = 0,
-        initialCropAmount = 0;*/
-
 quint32 resourcesProduction[] = {58, 52, 48, 56},
         resourcesAmount[] = {0, 0, 0, 0},
         initialResourcesAmount[] = {0, 0, 0, 0};
@@ -62,7 +47,7 @@ quint16 farmsScreen[FARMS_NUMBER][2] = {
     {935, 424}
 };
 
-void setResourcesScreen(/*MyWindow* window*/)
+void setResourcesScreen()
 {
     QVBoxLayout* vbox = new QVBoxLayout,
                * qResourcesProductionTroopsVBox = new QVBoxLayout,
@@ -86,7 +71,6 @@ void setResourcesScreen(/*MyWindow* window*/)
 
     QString tabsAssets = "tabs/";
     QLabel* qResources = getQLabel(tabsAssets + "resourcesHover", true, QT_TRANSLATE_NOOP("resources", "resources"), "resources");
-    //QPushButton* qBuildings = new QHoverPushButton(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings");
     QHoverLabel* qBuildings = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "buildings"), "buildings"),
                * qMap = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "map"), "map"),
                * qStatistics = new QHoverLabel(tabsAssets + QT_TRANSLATE_NOOP("resources", "statistics"), "statistics"),
@@ -102,10 +86,7 @@ void setResourcesScreen(/*MyWindow* window*/)
     qTabsHBox->addWidget(qReports);
     qTabsHBox->addWidget(qMessages);
 
-    //connect(qBuildings, SIGNAL(clicked()), window, [](){setBuildingsScreen();});
-    //QObject::connect(qBuildings, &QPushButton::clicked, [](){qDebug() << "ya";});
-
-    QObject::connect(qBuildings, &QHoverLabel::clicked, [](){ setBuildingsScreen(); }); // doesn't work if qMap is just QLabel* type
+    QObject::connect(qBuildings, &QHoverLabel::clicked, [](){ setBuildingsScreen(); });
 
     qTabsIcons->setLayout(qTabsHBox);
 
@@ -232,12 +213,8 @@ void addTroopLine(QVBoxLayout* qTroopsVBox, QString name, quint32 amount)
 {
     QWidget* troopLine = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->addWidget(getQLabel("troops/" + name + ".png")); // QT_TR_N_NOOP()
-    //qInfo(name.toStdString().c_str());
+    hbox->addWidget(getQLabel("troops/" + name + ".png"));
     hbox->addWidget(new QLabel(QString::number(amount) + " " + firstUppercase(translator.translate("resources", name.toStdString().c_str()))));
-    //qInfo(QObject::tr(name.toStdString().c_str()).toStdString().c_str());
-    //qInfo(translator.tr(name.toStdString().c_str()).toStdString().c_str());
-    //qInfo(translator.translate("resources", name.toStdString().c_str()).toStdString().c_str());
     hbox->addStretch();
     troopLine->setLayout(hbox);
     qTroopsVBox->addWidget(troopLine);
@@ -253,13 +230,12 @@ void updateResourcesAmount()
     }
 }
 
-void updateScreen(/*MyWindow* window*/)
+void updateScreen()
 {
     updateResourcesAmount();
-    setResourcesScreen(/*window*/);
+    setResourcesScreen();
     return;
 
-    //return;
     // TODO: could at least update screen only when resources amount change etc - otherwise have tooltip problem
 
     QWidget* centralWidget = window->centralWidget();
