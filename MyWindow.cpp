@@ -298,17 +298,17 @@ void MyWindow::startGame(bool isRestoring)
     {
         timestampVillageStart = QDateTime::currentSecsSinceEpoch();
         timestampGameRestored = timestampVillageStart;
+
+        // do C++ gives us that default array has null values ? - it seems
+        farms[0] = 2;
+        farms[1] = 2;
+        farms[4] = 1; // count compute each time required current production by farms levels but "that would be heavy"
+
+        for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
+        {
+            initialResourcesAmount[resourcesIndex] = 750;
+        }
     }
-
-    // do C++ gives us that default array has null values ?
-    farms[0] = 2;
-    farms[1] = 2;
-    farms[4] = 1;
-
-    initialLumberAmount = 750;
-    initialClayAmount = 750;
-    initialIronAmount = 750;
-    initialCropAmount = 750;
 
     setResourcesScreen(/*this*/);
     manageBackground();

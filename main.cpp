@@ -31,9 +31,18 @@ int main(int argc, char *argv[])
     {
         QSettings settings(settingsFile, QSettings::IniFormat);
         //screenView = static_cast<enum screenViewEnum>(settings.value("screenView").toInt()); // opening exactly where the user was, isn't that much interesting most of time
-        tribe = static_cast<enum tribeEnum>(settings.value("tribe").toInt());
+        tribe = static_cast<enum tribeEnum>(settings.value("tribe").toUInt());
         nickname = settings.value("nickname").toString();
         timestampVillageStart = settings.value("timestampVillageStart").toUInt();
+        for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
+        {
+            initialResourcesAmount[resourcesIndex] = settings.value("initialResources" + QString::number(resourcesIndex) + "Amount").toUInt();
+        }
+        for(quint8 farmsIndex = 0; farmsIndex < FARMS_NUMBER; farmsIndex++)
+        {
+            farms[farmsIndex] = settings.value("farms" + QString::number(farmsIndex)).toUInt();
+        }
+        window->startGame(true);
     }
     else
         window->setChooseTribeGUI();
@@ -52,6 +61,14 @@ int main(int argc, char *argv[])
     {
         QSettings settings(settingsFile, QSettings::IniFormat);
         settings.setValue("timestampGameClosed", QVariant(QDateTime::currentSecsSinceEpoch()));
+        for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
+        {
+            settings.setValue("initialResources" + QString::number(resourcesIndex) + "Amount", QVariant(/*initialResourcesAmount*/resourcesAmount[resourcesIndex])); // could only save non null values and when loading could give default value if not found
+        }
+        for(quint8 farmsIndex = 0; farmsIndex < FARMS_NUMBER; farmsIndex++)
+        {
+            settings.setValue("farms" + QString::number(farmsIndex), QVariant(farms[farmsIndex]));
+        }
         //settings.setValue("screenView", QVariant(screenView));
         settings.setValue("tribe", QVariant(tribe));
         settings.setValue("nickname", QVariant(nickname));

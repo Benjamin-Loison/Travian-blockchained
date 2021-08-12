@@ -32,7 +32,8 @@ extern qint64 timestampVillageStart,
                initialClayAmount,
                initialIronAmount,
                initialCropAmount;*/
-extern quint32 initialResourcesAmount[RESOURCES_NUMBER]; // not mandatory here for 1D array to give array size ?
+extern quint32 initialResourcesAmount[RESOURCES_NUMBER], // not mandatory here for 1D array to give array size ?
+               resourcesAmount[RESOURCES_NUMBER];
 
 extern quint8 farms[FARMS_NUMBER];
 extern quint16 farmsScreen[FARMS_NUMBER][2];

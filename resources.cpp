@@ -122,11 +122,12 @@ void setResourcesScreen(/*MyWindow* window*/)
     updateResourcesAmount();
 
     addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "warehouse"), 800);
-    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "lumber"), lumberAmount); // QT_TR_NOOP doesn't work because of no context I think even if tr was working :')
-    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "clay"), clayAmount);
-    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "iron"), ironAmount);
+    for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER - 1; resourcesIndex++)
+    {
+        addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", resourcesNames[resourcesIndex]), resourcesAmount[resourcesIndex]);
+    }
     addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "granary"), 800);
-    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "crop"), cropAmount);
+    addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", resourcesNames[CROP]), resourcesAmount[CROP]);
 
     qResourcesHBox->addStretch();
     qTabsResources->setLayout(qResourcesHBox);
@@ -139,10 +140,10 @@ void setResourcesScreen(/*MyWindow* window*/)
 
     setColor(qResourcesProduction, backgroundResourcesProductionTroops);
     qResourcesProductionVBox->addWidget(new QLabel(QObject::tr("Production per hour") + ":"));
-    addProductionLine(qResourcesProductionVBox, "lumber", lumberProduction);
-    addProductionLine(qResourcesProductionVBox, "clay", clayProduction);
-    addProductionLine(qResourcesProductionVBox, "iron", ironProduction);
-    addProductionLine(qResourcesProductionVBox, "crop", cropProduction);
+    for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
+    {
+        addProductionLine(qResourcesProductionVBox, resourcesNames[resourcesIndex], resourcesProduction[resourcesIndex]);
+    }
     qResourcesProduction->setLayout(qResourcesProductionVBox);
 
     // troops
@@ -246,16 +247,16 @@ void updateResourcesAmount()
 {
     double timeDelta = QDateTime::currentSecsSinceEpoch() - timestampGameRestored,
            timeFraction = timeDelta / 3600;
-    lumberAmount = initialLumberAmount + lumberProduction * timeFraction;
-    clayAmount = initialClayAmount + clayProduction * timeFraction;
-    ironAmount = initialIronAmount + ironProduction * timeFraction;
-    cropAmount = initialCropAmount + cropProduction * timeFraction;
+    for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
+    {
+        resourcesAmount[resourcesIndex] = initialResourcesAmount[resourcesIndex] + resourcesProduction[resourcesIndex] * timeFraction;
+    }
 }
 
 void updateScreen(/*MyWindow* window*/)
 {
     updateResourcesAmount();
-    //setResourcesScreen(/*window*/);
+    setResourcesScreen(/*window*/);
     return;
 
     //return;
@@ -284,7 +285,7 @@ void updateScreen(/*MyWindow* window*/)
     //if(subLayoutItem == 0)
     //    qInfo("layout error");
     QWidget* oldQWidget = subLayoutItem->widget();
-    QWidget* qWidget = getResource("lumber", lumberAmount);
+    QWidget* qWidget = getResource(resourcesNames[LUMBER], resourcesAmount[LUMBER]);
     //if(layout->replaceWidget(oldQWidget, qWidget) == nullptr)
     //    qInfo("error");
 
