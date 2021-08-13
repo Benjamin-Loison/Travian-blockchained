@@ -3,8 +3,10 @@
 #include <QSettings>
 #include <QFile>
 
-#include <QtNetwork>
-#include <functional>
+//#include <QtNetwork>
+//#include <functional>
+
+#include <qrsaencryption.h>
 
 #include "resources.h"
 #include "main.h"
@@ -15,6 +17,8 @@ QTranslator translator;
 MyWindow* window;
 QString nickname;
 
+void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
+
 // instead of linking README.md etc to be able to commit and push without forcing if added content directly through web interface, could just use a .gitignore no ? if so upload tools
 // gitignore doesn't seem to be the solution
 
@@ -22,6 +26,25 @@ QString nickname;
 // let's choose 23900 as default port like my birthdate
 // in defaultNodes.txt could use domain name in order to be more stable - done
 // just statistics and resources work could be a good beginning
+
+// max 2048 bits https://github.com/QuasarApp/Qt-Secret/issues/91
+bool testEncryptAndDecryptExample() {
+
+    QByteArray pub, priv;
+    QRSAEncryption e(QRSAEncryption::Rsa::RSA_2048);
+    e.generatePairKey(pub, priv); // or other rsa size
+
+    QByteArray msg = "test message";
+
+    auto encryptMessage = e.encode(msg, pub);
+
+    if (encryptMessage == msg)
+        return false;
+
+    auto decodeMessage = e.decode(encryptMessage, priv);
+
+    return decodeMessage == msg;
+}
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +56,12 @@ int main(int argc, char *argv[])
     else
         qInfo("languageFile couldn't be loaded !"); // how to inject languageFile value ?
 
-    htmlGet({"http://lemnoslife.com/"}, [](const QString &body){ qDebug() << body; qApp->quit(); });
+    //or just use downloaded file ?
+    //htmlGet({"https://raw.githubusercontent.com/Benjamin-Loison/Travian-blockchained/master/defaultNodes.txt"}, [](const QString &body){ qDebug() << body; });
+
+    if (testEncryptAndDecryptExample()) {
+            qInfo() << "Success!";
+        }
 
     window = new MyWindow();
     QString settingsFile = "settings.ini";
@@ -87,7 +115,7 @@ int main(int argc, char *argv[])
 }
 
 // https://stackoverflow.com/a/24966317/7123660
-void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun)
+/*void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun)
 {
    QScopedPointer<QNetworkAccessManager> manager(new QNetworkAccessManager);
    QNetworkReply *response = manager->get(QNetworkRequest(QUrl(url)));
@@ -106,7 +134,7 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun)
       auto const html = QString::fromUtf8(response->readAll());
       fun(html); // do something with the data
    }) && manager.take();
-}
+}*/
 
 QString getTribe(tribeEnum tribe)
 {

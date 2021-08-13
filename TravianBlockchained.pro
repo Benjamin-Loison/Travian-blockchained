@@ -1,4 +1,5 @@
 SOURCES += \
+    CryptoPlus.cpp \
     MyWindow.cpp \
     QPlus.cpp \
     QStringPlus.cpp \
@@ -9,6 +10,7 @@ QT += widgets
 QT += network
 
 HEADERS += \
+    CryptoPlus.h \
     MyWindow.h \
     QHoverLabel.h \
     QHoverPushButton.h \
