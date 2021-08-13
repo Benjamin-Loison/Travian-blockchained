@@ -18,6 +18,9 @@ quint32 resourcesProduction[] = {58, 52, 48, 56},
         resourcesAmount[] = {0, 0, 0, 0},
         initialResourcesAmount[] = {0, 0, 0, 0};
 
+quint32 warehouseCapacity = 800,
+        granaryCapacity = 800;
+
 QString resourcesNames[] = {"lumber", "clay", "iron", "crop"};
 
 quint8 farms[FARMS_NUMBER];
@@ -102,12 +105,12 @@ void setResourcesScreen()
 
     updateResourcesAmount();
 
-    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "warehouse"), 800);
+    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "warehouse"), warehouseCapacity);
     for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER - 1; resourcesIndex++)
     {
         addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", resourcesNames[resourcesIndex]), resourcesAmount[resourcesIndex]);
     }
-    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "granary"), 800);
+    addResourceCapacity(qResourcesHBox, QT_TRANSLATE_NOOP("resources", "granary"), granaryCapacity);
     addResource(qResourcesHBox, QT_TRANSLATE_NOOP("resources", resourcesNames[CROP]), resourcesAmount[CROP]);
 
     qResourcesHBox->addStretch();
@@ -226,7 +229,22 @@ void updateResourcesAmount()
            timeFraction = timeDelta / 3600;
     for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
     {
-        resourcesAmount[resourcesIndex] = initialResourcesAmount[resourcesIndex] + resourcesProduction[resourcesIndex] * timeFraction;
+        quint32 resourceAmount = initialResourcesAmount[resourcesIndex] + resourcesProduction[resourcesIndex] * timeFraction;
+        if(resourcesIndex < RESOURCES_NUMBER - 1)
+        {
+            if(resourceAmount > warehouseCapacity)
+            {
+                resourceAmount = warehouseCapacity;
+            }
+        }
+        else // crop only
+        {
+            if(resourceAmount > granaryCapacity)
+            {
+                resourceAmount = granaryCapacity;
+            }
+        }
+        resourcesAmount[resourcesIndex] = resourceAmount;
     }
 }
 

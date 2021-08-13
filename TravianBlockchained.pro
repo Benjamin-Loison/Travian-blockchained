@@ -5,7 +5,8 @@ SOURCES += \
     buildings.cpp \
     main.cpp \
     resources.cpp
-QT+=widgets
+QT += widgets
+QT += network
 
 HEADERS += \
     MyWindow.h \
@@ -44,4 +45,5 @@ DISTFILES += \
     assets/statisticsHover.png \
     assets/teutons.png \
     assets/travian.png \
-    assets/village.png
+    assets/village.png \
+    defaultNodes.txt

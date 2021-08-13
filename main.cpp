@@ -2,6 +2,10 @@
 #include <QtWidgets>
 #include <QSettings>
 #include <QFile>
+
+#include <QtNetwork>
+#include <functional>
+
 #include "resources.h"
 #include "main.h"
 
@@ -14,6 +18,11 @@ QString nickname;
 // instead of linking README.md etc to be able to commit and push without forcing if added content directly through web interface, could just use a .gitignore no ? if so upload tools
 // gitignore doesn't seem to be the solution
 
+// QtUPnP ? GUPnP ?
+// let's choose 23900 as default port like my birthdate
+// in defaultNodes.txt could use domain name in order to be more stable - done
+// just statistics and resources work could be a good beginning
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -24,6 +33,8 @@ int main(int argc, char *argv[])
     else
         qInfo("languageFile couldn't be loaded !"); // how to inject languageFile value ?
 
+    htmlGet({"http://lemnoslife.com/"}, [](const QString &body){ qDebug() << body; qApp->quit(); });
+
     window = new MyWindow();
     QString settingsFile = "settings.ini";
     if(QFile::exists(settingsFile))
@@ -33,7 +44,7 @@ int main(int argc, char *argv[])
         tribe = static_cast<enum tribeEnum>(settings.value("tribe").toUInt());
         nickname = settings.value("nickname").toString();
         timestampVillageStart = settings.value("timestampVillageStart").toUInt();
-        timestampGameClosed = settings.value("timestampGameClosed").toUInt(); // likewise we reduce
+        timestampGameClosed = settings.value("timestampGameClosed").toUInt();
         for(quint8 resourcesIndex = 0; resourcesIndex < RESOURCES_NUMBER; resourcesIndex++)
         {
             initialResourcesAmount[resourcesIndex] = settings.value("initialResources" + QString::number(resourcesIndex) + "Amount").toUInt();
@@ -47,7 +58,6 @@ int main(int argc, char *argv[])
     }
     else
         window->setChooseTribeGUI();
-
 
     window->show();
 
@@ -74,6 +84,28 @@ int main(int argc, char *argv[])
     }
 
     return res;
+}
+
+// https://stackoverflow.com/a/24966317/7123660
+void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun)
+{
+   QScopedPointer<QNetworkAccessManager> manager(new QNetworkAccessManager);
+   QNetworkReply *response = manager->get(QNetworkRequest(QUrl(url)));
+   QObject::connect(response, &QNetworkReply::finished, [response, fun]{
+      response->deleteLater();
+      response->manager()->deleteLater();
+      if (response->error() != QNetworkReply::NoError) return;
+      auto const contentType =
+            response->header(QNetworkRequest::ContentTypeHeader).toString();
+      static QRegularExpression re("charset=([!-~]+)");
+      auto const match = re.match(contentType);
+      if (!match.hasMatch() || 0 != match.captured(1).compare("utf-8", Qt::CaseInsensitive)) {
+         qWarning() << "Content charsets other than utf-8 are not implemented yet:" << contentType;
+         return;
+      }
+      auto const html = QString::fromUtf8(response->readAll());
+      fun(html); // do something with the data
+   }) && manager.take();
 }
 
 QString getTribe(tribeEnum tribe)
