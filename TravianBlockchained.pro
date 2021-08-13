@@ -1,3 +1,12 @@
+include(Qt-Secret/src/Qt-Secret.pri)
+
+#TEMPLATE = subdirs
+#CONFIG += ordered
+
+#SUBDIRS += \
+#           Qt-Secret \
+#           TravianBlockchained
+
 SOURCES += \
     CryptoPlus.cpp \
     MyWindow.cpp \

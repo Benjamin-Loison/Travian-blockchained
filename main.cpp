@@ -27,24 +27,56 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 // in defaultNodes.txt could use domain name in order to be more stable - done
 // just statistics and resources work could be a good beginning
 
-// max 2048 bits https://github.com/QuasarApp/Qt-Secret/issues/91
+// max 2048 bits https://github.com/QuasarApp/Qt-Secret/issues/91 - doesn't seem to be the case
 bool testEncryptAndDecryptExample() {
 
     QByteArray pub, priv;
     QRSAEncryption e(QRSAEncryption::Rsa::RSA_2048);
+    qDebug() << QTime::currentTime().toString() << " 0";
     e.generatePairKey(pub, priv); // or other rsa size
+    qDebug() << QTime::currentTime().toString() << " 1"; // 2 s for 2048, 25->29->41 for 4096, 240->492->565 for 8192
 
     QByteArray msg = "test message";
 
     auto encryptMessage = e.encode(msg, pub);
+    qDebug() << QTime::currentTime().toString() << " 2"; // 0 s for 2048, 0 for 4096, 3 for 8192
+    //qInfo(encryptMessage.toHex()); // pas les mêmes je n'ai pas dû bien comprendre la signature RSA
+    //qInfo(e.encode(msg, priv).toHex());
 
     if (encryptMessage == msg)
         return false;
 
     auto decodeMessage = e.decode(encryptMessage, priv);
+    qDebug() << QTime::currentTime().toString() << " 3"; // 0 s for 2048, 1 for 4096, 5 for 8192
 
     return decodeMessage == msg;
 }
+
+bool testExample() {
+    QByteArray pub, priv;
+    qDebug() << QTime::currentTime().toString() << " a"; // how to get millis ?
+    QRSAEncryption e(QRSAEncryption::Rsa::RSA_2048);
+    qDebug() << QTime::currentTime().toString() << " b";
+    e.generatePairKey(pub, priv); // or other rsa size
+    qDebug() << QTime::currentTime().toString() << " bc";
+
+    QByteArray msg = "test message";
+
+    auto signedMessage = e.signMessage(msg, priv); // 1 s for 2048, 12 for 4096, 97 for 8192
+    qDebug() << QTime::currentTime().toString() << " c";
+
+    if (e.checkSignMessage(signedMessage, pub)) { // 3 s for 2048, 22 for 4096, 170 for 8192
+        qInfo() <<" message signed success";
+        qDebug() << QTime::currentTime().toString() << " d";
+        return true;
+    }
+    qDebug() << QTime::currentTime().toString() << " e";
+
+    return false;
+}
+
+// with this https://crypto.stackexchange.com/q/9896 I could reimplement checkSignMessage ? how is it ?
+// https://github.com/QuasarApp/Qt-Secret/blob/main/src/Qt-RSA/qrsaencryption.cpp
 
 int main(int argc, char *argv[])
 {
@@ -60,8 +92,11 @@ int main(int argc, char *argv[])
     //htmlGet({"https://raw.githubusercontent.com/Benjamin-Loison/Travian-blockchained/master/defaultNodes.txt"}, [](const QString &body){ qDebug() << body; });
 
     if (testEncryptAndDecryptExample()) {
-            qInfo() << "Success!";
-        }
+           qInfo() << "Success!";
+       }
+    /*if (testExample()) {
+            qInfo() <<"success!";
+        }*/
 
     window = new MyWindow();
     QString settingsFile = "settings.ini";
