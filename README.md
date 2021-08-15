@@ -7,3 +7,4 @@ It is recommended to have a permanent node connected in order to give pieces of 
 <!--Some liberties have been taken from Travian Legends interface which were considered as pointless.-->
 
 Dependency: https://github.com/QuasarApp/Qt-Secret
+<!--We are not in any way affiliated with Travian Games GmbH. If you have any issue please, declare one on GitHub. -->

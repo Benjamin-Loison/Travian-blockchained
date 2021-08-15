@@ -64,3 +64,8 @@ void drawCircle(QPainter* painter, quint16 centerX, quint16 centerY, quint16 cir
         painter->drawText(centerX + textWidthDiv2 * 1.4, centerY + textHeightDiv2, text); // why this factor ?
     }
 }
+
+QString getTime()
+{
+    return QTime::currentTime().toString("hh:mm:ss,zzz");
+}

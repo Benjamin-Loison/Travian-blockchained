@@ -9,6 +9,7 @@
 #include <qrsaencryption.h>
 
 #include "resources.h"
+#include "QPlus.h"
 #include "main.h"
 
 screenViewEnum screenView;
@@ -28,18 +29,29 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 // just statistics and resources work could be a good beginning
 
 // max 2048 bits https://github.com/QuasarApp/Qt-Secret/issues/91 - doesn't seem to be the case
+// min 3072 recommended by NSA https://apps.nsa.gov/iaarchive/programs/iad-initiatives/cnsa-suite.cfm
+// hash 384 recommended as minimum ?! https://www.keylength.com/fr/compare/
+
+// RSA in seconds
+// key size   2048  3072   4096   6144   8192
+// genPairKey 2.119  6.974 44.000 31.384 243.044 (random process)
+// encode     0.062  0.170  0.437  1.489   3.470
+// decode     0.096  0.286  0.745  2.449   5.651
+// sign       1.668  5.503 13.226 44.422 104.119
+// checkSign  2.906 10.014 23.420 75.711 262.077
+
 bool testEncryptAndDecryptExample() {
 
     QByteArray pub, priv;
-    QRSAEncryption e(QRSAEncryption::Rsa::RSA_2048);
-    qDebug() << QTime::currentTime().toString() << " 0";
+    QRSAEncryption e(QRSAEncryption::Rsa::RSA_8192);
+    qDebug() << getTime() << " 0"; // how to get millis ?
     e.generatePairKey(pub, priv); // or other rsa size
-    qDebug() << QTime::currentTime().toString() << " 1"; // 2 s for 2048, 25->29->41 for 4096, 240->492->565 for 8192
+    qDebug() << getTime() << " 1"; // 2 s for 2048, 7 for 3072, 25->29->41 for 4096, 240->492->565 for 8192
 
     QByteArray msg = "test message";
 
     auto encryptMessage = e.encode(msg, pub);
-    qDebug() << QTime::currentTime().toString() << " 2"; // 0 s for 2048, 0 for 4096, 3 for 8192
+    qDebug() << getTime() << " 2"; // 0 s for 2048, 1 for 3072, 0 for 4096, 3 for 8192
     //qInfo(encryptMessage.toHex()); // pas les mêmes je n'ai pas dû bien comprendre la signature RSA
     //qInfo(e.encode(msg, priv).toHex());
 
@@ -47,30 +59,30 @@ bool testEncryptAndDecryptExample() {
         return false;
 
     auto decodeMessage = e.decode(encryptMessage, priv);
-    qDebug() << QTime::currentTime().toString() << " 3"; // 0 s for 2048, 1 for 4096, 5 for 8192
+    qDebug() << getTime() << " 3"; // 0 s for 2048, 1 for 4096, 5 for 8192
 
     return decodeMessage == msg;
 }
 
 bool testExample() {
     QByteArray pub, priv;
-    qDebug() << QTime::currentTime().toString() << " a"; // how to get millis ?
-    QRSAEncryption e(QRSAEncryption::Rsa::RSA_2048);
-    qDebug() << QTime::currentTime().toString() << " b";
+    //qDebug() << getTime() << " a";
+    QRSAEncryption e(QRSAEncryption::Rsa::RSA_8192);
+    qDebug() << getTime() << " b";
     e.generatePairKey(pub, priv); // or other rsa size
-    qDebug() << QTime::currentTime().toString() << " bc";
+    qDebug() << getTime() << " bc";
 
     QByteArray msg = "test message";
 
     auto signedMessage = e.signMessage(msg, priv); // 1 s for 2048, 12 for 4096, 97 for 8192
-    qDebug() << QTime::currentTime().toString() << " c";
+    qDebug() << getTime() << " c";
 
     if (e.checkSignMessage(signedMessage, pub)) { // 3 s for 2048, 22 for 4096, 170 for 8192
         qInfo() <<" message signed success";
-        qDebug() << QTime::currentTime().toString() << " d";
+        qDebug() << getTime() << " d";
         return true;
     }
-    qDebug() << QTime::currentTime().toString() << " e";
+    qDebug() << getTime() << " e";
 
     return false;
 }
@@ -91,12 +103,12 @@ int main(int argc, char *argv[])
     //or just use downloaded file ?
     //htmlGet({"https://raw.githubusercontent.com/Benjamin-Loison/Travian-blockchained/master/defaultNodes.txt"}, [](const QString &body){ qDebug() << body; });
 
-    if (testEncryptAndDecryptExample()) {
+    /*if (testEncryptAndDecryptExample()) {
            qInfo() << "Success!";
-       }
-    /*if (testExample()) {
+       }*/
+    if (testExample()) {
             qInfo() <<"success!";
-        }*/
+        }
 
     window = new MyWindow();
     QString settingsFile = "settings.ini";
