@@ -6,7 +6,7 @@
 //#include <QtNetwork>
 //#include <functional>
 
-#include <qrsaencryption.h>
+//#include <qrsaencryption.h>
 
 #include "resources.h"
 #include "QPlus.h"
@@ -40,7 +40,7 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 // sign       1.668  5.503 13.226 44.422 104.119
 // checkSign  2.906 10.014 23.420 75.711 262.077
 
-bool testEncryptAndDecryptExample() {
+/*bool testEncryptAndDecryptExample() {
 
     QByteArray pub, priv;
     QRSAEncryption e(QRSAEncryption::Rsa::RSA_8192);
@@ -85,7 +85,7 @@ bool testExample() {
     qDebug() << getTime() << " e";
 
     return false;
-}
+}*/
 
 // with this https://crypto.stackexchange.com/q/9896 I could reimplement checkSignMessage ? how is it ?
 // https://github.com/QuasarApp/Qt-Secret/blob/main/src/Qt-RSA/qrsaencryption.cpp
@@ -106,12 +106,14 @@ int main(int argc, char *argv[])
     /*if (testEncryptAndDecryptExample()) {
            qInfo() << "Success!";
        }*/
-    if (testExample()) {
+    /*if (testExample()) {
             qInfo() <<"success!";
-        }
+        }*/
+
+
 
     window = new MyWindow();
-    QString settingsFile = "settings.ini";
+    QString settingsFile = "user/settings.ini";
     if(QFile::exists(settingsFile))
     {
         QSettings settings(settingsFile, QSettings::IniFormat);

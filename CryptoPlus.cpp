@@ -1,4 +1,5 @@
 #include <QCryptographicHash>
+#include <QProcess>
 #include "CryptoPlus.h"
 
 QString SHA256(QString input)
@@ -17,6 +18,21 @@ QString doubleSHA256(QString input)
             secondOutput = SHA256(firstOutput);
     return secondOutput;
 }
+
+QString callOpenSSL(QString arguments)
+{
+    QProcess process;
+    process.start("openssl", arguments.split(" "));
+    process.waitForFinished(-1);
+
+    QString output(process.readAllStandardOutput()); // can't be QString output = process.readAllStandardOutput(); :'(
+    //qInfo(output.toStdString().c_str());
+    //QString error(process.readAllStandardError());
+    //qInfo(error.toStdString().c_str());
+    return output;
+}
+
+
 
 // AES
 // crypto++ https://stackoverflow.com/a/21885471/7123660 ?
