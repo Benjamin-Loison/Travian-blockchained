@@ -11,7 +11,7 @@
 #include "resources.h"
 #include "QPlus.h"
 #include "main.h"
-
+//
 screenViewEnum screenView;
 tribeEnum tribe;
 QTranslator translator;
