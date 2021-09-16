@@ -9,7 +9,7 @@ QString PRIVATE_KEY = USER_FOLDER + "private-key.pem",
 
 QString SHA512(QString input)
 {
-    QCryptographicHash cryptographicHash = QCryptographicHash(QCryptographicHash::Sha512);
+    QCryptographicHash cryptographicHash(QCryptographicHash::Sha512); // can't do classical " = QCryptographicHash" on Linux... (use of deleted function QCryptographicHash::QCryptographicHash(const QCryptographicHash&) with Qt 5.12.8)
     QByteArray byteArray = input.toUtf8(),
                hashedByteArray = cryptographicHash.hash(byteArray, QCryptographicHash::Sha512); // why have to repeat it ?!
     QString hashed = hashedByteArray.toHex();
