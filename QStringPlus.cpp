@@ -3,6 +3,7 @@
 
 QString firstUppercase(QString s)
 {
+    if(s == "") return s; // shouldn't happen but likewise can debug without crashing
     s[0] = s[0].toTitleCase();
     return s;
 }

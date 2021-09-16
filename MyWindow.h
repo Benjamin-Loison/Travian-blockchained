@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QTabWidget>
 #include <QVBoxLayout>
+#include "troops.h"
 
 class MyWindow : public QMainWindow
 {
@@ -23,11 +24,10 @@ class MyWindow : public QMainWindow
 
     public slots:
         void setChooseLocationGUI();
-        void chooseLocation();
         void startGame(bool isRestoring = false); // can't use a single void for all slots :'(
-        void refreshLoop();
+        void refreshLoop(/*bool refresh = false*/); // connect in MyWindow doesn't seem to work according to Qt logs otherwise
     private:
-        void addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
+        void addTribe(tribeEnum tribe, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended = false),
              addTribeText(QVBoxLayout* vbox, QString tribeName, QString troopName, QString text);
         void keyPressEvent(QKeyEvent* pe) override;
         QTabWidget* m_tabs;

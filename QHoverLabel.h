@@ -12,13 +12,17 @@ class QHoverLabel : public QLabel
     Q_OBJECT
 
     public:
-        QHoverLabel(QString path, QString name, QWidget* parent = nullptr) : QLabel(parent)
+        QHoverLabel(QString path, QString name, bool isChoosen = false, QWidget* parent = nullptr) : QLabel(parent)
         {
-            m_notHoverPixmap = getQPixmap(path + ".png");
+            m_isChoosen = isChoosen;
+            if(!m_isChoosen)
+            {
+                setCursor(Qt::PointingHandCursor);
+                m_notHoverPixmap = getQPixmap(path + ".png");
+            }
             m_hoverPixmap = getQPixmap(path + "Hover.png");
-            setCursor(Qt::PointingHandCursor);
-            setPixmap(m_notHoverPixmap);
-            QSize s = m_notHoverPixmap.size();
+            setPixmap(m_isChoosen ? m_hoverPixmap : m_notHoverPixmap);
+            QSize s = m_hoverPixmap.size();
             setMaximumSize(s.width(), s.height()); // otherwise QLabel bounding box goes crazy
             setToolTip(firstUppercase(translator.translate("resources", name.toStdString().c_str())));
         }
@@ -32,24 +36,28 @@ class QHoverLabel : public QLabel
         {
             Q_UNUSED(event) // can't do another way ?
 
-            emit clicked();
+            if(!m_isChoosen)
+                emit clicked();
         }
 
         void enterEvent(QEnterEvent* ev) override
         {
             Q_UNUSED(ev)
 
-            setPixmap(m_hoverPixmap);
+            if(!m_isChoosen)
+                setPixmap(m_hoverPixmap);
             //QLabel::enterEvent(ev);
         }
         void leaveEvent(QEvent* ev) override
         {
             Q_UNUSED(ev)
 
-            setPixmap(m_notHoverPixmap);
+            if(!m_isChoosen)
+                setPixmap(m_notHoverPixmap);
         }
 
     private:
+        bool m_isChoosen;
         QPixmap m_notHoverPixmap,
                 m_hoverPixmap;
 

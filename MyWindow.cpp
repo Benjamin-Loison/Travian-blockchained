@@ -4,8 +4,12 @@
 #include "QStringPlus.h"
 #include "QPlus.h"
 #include "resources.h"
+#include "buildings.h"
+#include "troops.h"
 #include "main.h"
 #include "MyWindow.h"
+#include "CryptoPlus.h"
+#include "QClickableWidget.h"
 
 MyWindow::MyWindow()
 {
@@ -50,9 +54,9 @@ void MyWindow::setChooseTribeGUI()
 
     connect(confirmButton, SIGNAL(clicked()), this, SLOT(setChooseLocationGUI()));
 
-    addTribe(QT_TR_NOOP("gauls"), "phalanx", tr("Low time requirements"), tr("Loot protection and good defense"), tr("Excellent, fast cavalry"), tr("Well suited to new players"));
-    addTribe(QT_TR_NOOP("romans"), "legionnaire", tr("Moderate time requirements"), tr("Can develop villages the fastest"), tr("Very strong but expensive troops"), tr("Hard to play for new players"));
-    addTribe(QT_TR_NOOP("teutons"), "clubswinger", tr("High time requirements"), tr("Good at looting in early game"), tr("Strong, cheap infantry"), tr("For aggressive players"));
+    addTribe(TRIBE_GAULS, tr("Low time requirements"), tr("Loot protection and good defense"), tr("Excellent, fast cavalry"), tr("Well suited to new players"));
+    addTribe(TRIBE_ROMANS, tr("Moderate time requirements"), tr("Can develop villages the fastest"), tr("Very strong but expensive troops"), tr("Hard to play for new players"));
+    addTribe(TRIBE_TEUTONS, tr("High time requirements"), tr("Good at looting in early game"), tr("Strong, cheap infantry"), tr("For aggressive players"));
 }
 
 void MyWindow::keyPressEvent(QKeyEvent* pe)
@@ -74,7 +78,7 @@ QLabel* MyWindow::setTitle(QString title)
     return qTitle;
 }
 
-void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended)
+void MyWindow::addTribe(tribeEnum tribe, QString timeRequirement, QString speciality, QString troopsTraining, QString designedForUsers, bool recommended)
 {
     Q_UNUSED(recommended)
 
@@ -84,6 +88,8 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     QWidget* subTabs = new QWidget;
     QHBoxLayout* hbox = new QHBoxLayout;
 
+    QString tribeName = getTribe(tribe),
+            troopName = troopsNames[tribe][0];
     addTribeText(vbox, tribeName, troopName, timeRequirement);
     addTribeText(vbox, tribeName, troopName, speciality);
     addTribeText(vbox, tribeName, troopName, troopsTraining);
@@ -92,7 +98,7 @@ void MyWindow::addTribe(QString tribeName, QString troopName, QString timeRequir
     subTabs->setLayout(vbox);
     hbox->addWidget(subTabs);
 
-    QLabel * qIcon = new QLabel();
+    QLabel* qIcon = new QLabel(); // could use getQLabel instead ?
     qIcon->setPixmap(getQPixmap("tribes/" + tribeName + ".png"));
     hbox->addWidget(qIcon);
 
@@ -214,13 +220,38 @@ void MyWindow::setChooseLocationGUI()
     setCentralWidget(screen);
 }
 
-void drawBuilding(QPainter* painter, QString building, quint16 x, quint16 y, quint8 level)
+void drawBuilding(QPainter* painter, QString building, quint16 x, quint16 y, quint8 level, qint16 offsetX = 0, qint16 offsetY = 0)
 {
     QString buildingsAssets = "buildings/" + getTribe() + "/";
     QPixmap buildingPixmap = getQPixmap(buildingsAssets + building + ".png");
     QSize buildingSize = buildingPixmap.size();
     painter->drawPixmap(x, y, buildingPixmap);
-    drawCircle(painter, x + buildingSize.width() / 2, y + buildingSize.height() / 2, CIRCLE_SIZE, QString::number(level));
+    quint16 finalX = x + buildingSize.width() / 2 + offsetX,
+            finalY = y + buildingSize.height() / 2 + offsetY;
+    //qInfo((building + " " + QString::number(finalX) + " " + QString::number(finalY)).toStdString().c_str());
+    drawCircle(painter, finalX, finalY, CIRCLE_SIZE, QString::number(level));
+}
+
+void displayBuilding(QPainter* painter, quint8 buildingsIndex)
+{
+    //if(buildingsIndex == 7 || buildingsIndex == 9)
+    //    return;
+    QPair<quint8, quint8> building = buildings[buildingsIndex];
+    quint8 buildingLevel = building.second,
+           buildingType = building.first;
+    bool isABuildingAWall = isAWall(buildingType);
+    //qInfo(QString::number(isABuildingAWall).toStdString().c_str());
+    qint16 offsetX = isABuildingAWall ? -400 : -58,
+           offsetY = isABuildingAWall ? -480 : -85;
+    quint16 x = buildingsScreen[buildingsIndex][0],
+            y = buildingsScreen[buildingsIndex][1];
+    if(buildingLevel > 0)
+    {
+        QString buildingName = buildingsNames[buildingType];
+        drawBuilding(painter, buildingName, x + offsetX, y + offsetY, buildingLevel, isABuildingAWall ? 3 : 0, isABuildingAWall ? 210 : 0); // 120 is the image size (width and height) - perfect values
+    }
+    else
+        drawCircle(painter, x, y, CIRCLE_SIZE, QString::number(buildingLevel), true);
 }
 
 void MyWindow::manageBackground()
@@ -229,8 +260,10 @@ void MyWindow::manageBackground()
     {
         return;
     }
-    QString villageAssets = "village/";
-    QPixmap qBackgroundPixmap = getQPixmap(villageAssets + (screenView == SCREEN_VIEW_RESOURCES ? "resources" : "buildings") + "Background.jpg");
+    QString villageAssets = "village/",
+            backgroundPath = villageAssets + (screenView == SCREEN_VIEW_RESOURCES || screenView == SCREEN_VIEW_RESOURCE ? "resources" : "buildings") + "Background.jpg";
+    QPixmap qBackgroundPixmap = getQPixmap(backgroundPath);
+    //QClickablePixmap* qBackgroundPixmap = new QClickablePixmap(backgroundPath);
 
     QPainter* painter = new QPainter(&qBackgroundPixmap);
     if(screenView == SCREEN_VIEW_RESOURCES)
@@ -243,12 +276,16 @@ void MyWindow::manageBackground()
             drawCircle(painter, farmsScreen[farmsIndex][0], farmsScreen[farmsIndex][1], CIRCLE_SIZE, QString::number(farms[farmsIndex]));
         }
         // might have troubles later because of different interfaces (on default one up crops circle is just not at the right place u_u)
-
     }
     else if(screenView == SCREEN_VIEW_BUILDINGS)
     {
-        drawBuilding(painter, "main building", 1070, 250, 1);
-        drawBuilding(painter, "rally point", 1350, 280, 1);
+        //drawBuilding(painter, "main building", 1070, 250, 1);
+        //drawBuilding(painter, "rally point", 1350, 280, 1);
+        displayBuilding(painter, BUILDINGS_SLOTS_NUMBER - 1); // need to use this code schema otherwise palisade is rendered above buildings
+        for(quint8 buildingsIndex = 0; buildingsIndex < BUILDINGS_SLOTS_NUMBER - 1; buildingsIndex++)
+        {
+            displayBuilding(painter, buildingsIndex);
+        }
     }
     painter->end();
 
@@ -265,23 +302,22 @@ void MyWindow::resizeEvent(QResizeEvent* evt)
     QMainWindow::resizeEvent(evt);
 }
 
-void MyWindow::chooseLocation()
-{
-    QMessageBox::information(this, "Titre de la fenêtre", "Choosed location !");
-}
-
 void MyWindow::startGame(bool isRestoring)
 {
     screenView = SCREEN_VIEW_RESOURCES;
 
-    // should log in a file (settings.ini) every actions etc
     if(isRestoring)
     {
-        //timestampGameRestored = QDateTime::currentSecsSinceEpoch();
+        //timestampGameRestored = getSeconds();
     }
     else
     {
-        timestampVillageStart = QDateTime::currentSecsSinceEpoch();
+        QDir().mkdir(USER_FOLDER);
+        QString generatePrivateKeyCommand = "ecparam -genkey -name prime256v1 -noout -out " + PRIVATE_KEY;
+        callOpenSSL(generatePrivateKeyCommand);
+        callOpenSSL("ec -in " + PRIVATE_KEY + " -pubout -out " + PUBLIC_KEY);
+
+        timestampVillageStart = getSeconds();
         timestampGameClosed = timestampVillageStart;
 
         // do C++ gives us that default array has null values ? - it seems
@@ -293,19 +329,23 @@ void MyWindow::startGame(bool isRestoring)
         {
             initialResourcesAmount[resourcesIndex] = 750;
         }
+        resourcesAmount[FREE_CROP] = 20;
+        population = 8;
+        culturePoints = 500; // better to manage right now even if useless likewise can do update and it works without restart
     }
 
-    setResourcesScreen();
+    setResourceScreen();
     manageBackground();
 
+    //refreshLoop();
     QTimer* timer = new QTimer();
-    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(refreshLoop()));
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(refreshLoop(/*true*/)));
     timer->start(1000);
 
 }
 
-void MyWindow::refreshLoop()
+void MyWindow::refreshLoop(/*bool refresh*/)
 {
-    updateScreen();
+    updateScreen(/*refresh*/);
     //setResourcesScreen(); // let's not assume + 1 each time in case of desync etc
 }

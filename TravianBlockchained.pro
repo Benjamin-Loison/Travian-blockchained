@@ -1,33 +1,43 @@
-include(Qt-Secret/src/Qt-Secret.pri)
-
-#TEMPLATE = subdirs
-#CONFIG += ordered
-
-#SUBDIRS += \
-#           Qt-Secret \
-#           TravianBlockchained
-
 SOURCES += \
     CryptoPlus.cpp \
     MyWindow.cpp \
+    QFilePlus.cpp \
     QPlus.cpp \
+    QRandomPlus.cpp \
     QStringPlus.cpp \
     buildings.cpp \
     main.cpp \
-    resources.cpp
-QT += widgets
-QT += network
+    map.cpp \
+    network.cpp \
+    profile.cpp \
+    reports.cpp \
+    resources.cpp \
+    statistics.cpp \
+    troops.cpp \
+    village.cpp
+
+QT += widgets network
 
 HEADERS += \
     CryptoPlus.h \
     MyWindow.h \
+    QClickableWidget.h \
+    QFilePlus.h \
     QHoverLabel.h \
     QHoverPushButton.h \
     QPlus.h \
+    QRandomPlus.h \
     QStringPlus.h \
     buildings.h \
     main.h \
-    resources.h
+    map.h \
+    network.h \
+    profile.h \
+    reports.h \
+    resources.h \
+    statistics.h \
+    troops.h \
+    village.h
 
 TRANSLATIONS = travianblockchained_fr.ts
 

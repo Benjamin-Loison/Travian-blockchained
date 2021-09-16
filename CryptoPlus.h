@@ -3,6 +3,10 @@
 
 #include <QString>
 
-QString doubleSHA256(QString input);
+extern QString PRIVATE_KEY,
+               PUBLIC_KEY;
+
+QString doubleSHA512(QString input),
+        callOpenSSL(QString arguments);
 
 #endif
