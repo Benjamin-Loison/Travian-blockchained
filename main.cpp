@@ -13,6 +13,8 @@
 #include "buildings.h"
 #include "QPlus.h"
 #include "main.h"
+#include "server.h"
+#include "client.h"
 //#include "network.h"
 
 QString USER_FOLDER = "user/";
@@ -26,7 +28,8 @@ QString nickname;
 QPair<quint16, quint16> coordinates;
 quint8 screenViewFarmsIndex,
        screenViewBuildingsIndex;
-//Server* server;
+Server* server;
+Client* client;
 
 void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 
@@ -54,11 +57,17 @@ int main(int argc, char *argv[])
     //QStringList defaultNodes = getFileContent("defaultNodes.txt");
 
     // could make a mode where when we build something we can't do anything else (for the moment) and so we are teleported in the future when it will be done and likewise we instantly play our all beginning of game
-    bool runServer = true;
+    bool runServer = false,
+         runClient = true;
     if(runServer)
     {
-        //server = new Server;
+        server = new Server;
     }
+    if(runClient)
+    {
+        client = new Client;
+    }
+
 
     myWindow = new MyWindow();
     QString settingsFile = USER_FOLDER + "settings.ini";
