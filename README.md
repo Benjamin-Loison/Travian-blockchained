@@ -13,6 +13,5 @@ Warning: It's quite easy to modify locally your resources etc but if you do so, 
 <!-- should upload tools used to generate assets/data etc ? -->
 
 Dependency: OpenSSL
-<!-- Dependency: https://github.com/QuasarApp/Qt-Secret -->
 <!--We are not in any way affiliated with Travian Games GmbH. If you have any issue please, declare one on GitHub. -->
 <!-- make a french version of readme etc ? ->
