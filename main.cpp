@@ -13,6 +13,7 @@
 #include "buildings.h"
 #include "QPlus.h"
 #include "main.h"
+//#include "network.h"
 
 QString USER_FOLDER = "user/";
 
@@ -25,6 +26,7 @@ QString nickname;
 QPair<quint16, quint16> coordinates;
 quint8 screenViewFarmsIndex,
        screenViewBuildingsIndex;
+//Server* server;
 
 void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 
@@ -32,7 +34,6 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 // gitignore doesn't seem to be the solution
 
 // QtUPnP ? GUPnP ?
-// let's choose 23900 as default port like my birthdate
 // in defaultNodes.txt could use domain name in order to be more stable - done
 // just statistics and resources work could be a good beginning
 
@@ -53,6 +54,11 @@ int main(int argc, char *argv[])
     //QStringList defaultNodes = getFileContent("defaultNodes.txt");
 
     // could make a mode where when we build something we can't do anything else (for the moment) and so we are teleported in the future when it will be done and likewise we instantly play our all beginning of game
+    bool runServer = true;
+    if(runServer)
+    {
+        //server = new Server;
+    }
 
     myWindow = new MyWindow();
     QString settingsFile = USER_FOLDER + "settings.ini";

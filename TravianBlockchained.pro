@@ -6,12 +6,13 @@ SOURCES += \
     QRandomPlus.cpp \
     QStringPlus.cpp \
     buildings.cpp \
+    client.cpp \
     main.cpp \
     map.cpp \
-    network.cpp \
     profile.cpp \
     reports.cpp \
     resources.cpp \
+    server.cpp \
     statistics.cpp \
     troops.cpp \
     village.cpp
@@ -29,12 +30,13 @@ HEADERS += \
     QRandomPlus.h \
     QStringPlus.h \
     buildings.h \
+    client.h \
     main.h \
     map.h \
-    network.h \
     profile.h \
     reports.h \
     resources.h \
+    server.h \
     statistics.h \
     troops.h \
     village.h
