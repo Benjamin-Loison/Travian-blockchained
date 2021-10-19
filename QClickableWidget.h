@@ -6,7 +6,6 @@
 #include <QMouseEvent> // used to be able to compile without this if don't call x and y function
 #include "resources.h"
 #include "buildings.h"
-#include "QPlus.h"
 #include "main.h"
 
 class QClickableWidget : public QWidget

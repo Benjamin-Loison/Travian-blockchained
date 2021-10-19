@@ -8,7 +8,7 @@ QChar hexs[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c',
 void initializeRandom()
 {
     // because we also share timestamp do we have same randomness on different computers even if seed with same time ?
-    qRandomGenerator = QRandomGenerator(QTime::currentTime().msec());
+    qRandomGenerator = QRandomGenerator(QTime::currentTime().msec()); // doesn't seem necessary in Among Us decentralized for instance
 }
 
 QString randomHex(quint16 length)

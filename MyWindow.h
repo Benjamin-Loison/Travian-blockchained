@@ -23,7 +23,7 @@ class MyWindow : public QMainWindow
         void resizeEvent(QResizeEvent* evt) override;
 
     public slots:
-        void setChooseLocationGUI();
+        void setChooseLocationGUI(bool first = true, bool isNorth = true, bool isWest = true);
         void startGame(bool isRestoring = false); // can't use a single void for all slots :'(
         void refreshLoop(/*bool refresh = false*/); // connect in MyWindow doesn't seem to work according to Qt logs otherwise
     private:

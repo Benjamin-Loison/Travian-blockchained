@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     //QStringList defaultNodes = getFileContent("defaultNodes.txt");
 
     // could make a mode where when we build something we can't do anything else (for the moment) and so we are teleported in the future when it will be done and likewise we instantly play our all beginning of game
-    bool runServer = false,
-         runClient = true;
+    bool runServer = true,
+         runClient = false;
     if(runServer)
     {
         server = new Server;
@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
     if(runClient)
     {
         client = new Client;
+        client->sendToServer("hello server !");
     }
-
 
     myWindow = new MyWindow();
     QString settingsFile = USER_FOLDER + "settings.ini";

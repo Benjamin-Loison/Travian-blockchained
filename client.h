@@ -4,15 +4,17 @@
 #include <QtWidgets>
 #include <QtNetwork>
 
+#define SERVER_PORT 23090
+
 class Client : public QWidget
 {
     Q_OBJECT
 
     public:
         Client();
+        void sendToServer(QString messageToSend);
 
     private slots:
-        void sendToServer();
         void dataReceived();
         void socketError(QAbstractSocket::SocketError error);
 

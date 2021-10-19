@@ -10,6 +10,7 @@
 #include "MyWindow.h"
 #include "CryptoPlus.h"
 #include "QClickableWidget.h"
+#include "QClickableLabel.h"
 
 MyWindow::MyWindow()
 {
@@ -17,6 +18,7 @@ MyWindow::MyWindow()
 
     setWindowIcon(getQIcon("travian.png"));
     setWindowTitle("Travian blockchained");
+    // why no icon when right click on launcher application in Windows taskbar ?
 }
 
 void MyWindow::setChooseTribeGUI()
@@ -135,48 +137,56 @@ void drawTextCentered(QPainter* painter, unsigned short x, unsigned short y, QSt
     painter->drawText(x - textWidthDiv2, y, text);
 }
 
-void MyWindow::setChooseLocationGUI()
+// or could not choose to have a better repartition ?
+void MyWindow::setChooseLocationGUI(bool first, bool isNorth, bool isWest)
 {
-    QString nicknameTmp = nicknameLineEdit->text();
-    // should check if nickname already used
-    if(nicknameTmp == "") // could check for ascii ? or let's accept UTF8 ? - just ban emots ?
+    if(first)
     {
-        QMessageBox::warning(this, tr("Invalid nickname"), tr("Your nickname can't be empty"));
-        return;
-    }
-    nickname = nicknameTmp;
+        QString nicknameTmp = nicknameLineEdit->text();
+        // should check if nickname already used
+        if(nicknameTmp == "") // could check for ascii ? or let's accept UTF8 ? - just ban emots ?
+        {
+            QMessageBox::warning(this, tr("Invalid nickname"), tr("Your nickname can't be empty"));
+            return;
+        }
+        nickname = nicknameTmp;
 
-    screenView = SCREEN_VIEW_SELECT_LOCATION;
+        screenView = SCREEN_VIEW_SELECT_LOCATION;
 
-    QWidget* oldScreen = centralWidget();
-    QLayout* layout = oldScreen->layout();
-    QLayoutItem* tabsItem = layout->itemAt(2);
-    QTabWidget* tabs = (QTabWidget*)tabsItem->widget(); // maybe the thing missing in refreshLoop is casting ?
-    quint8 tabsIndex = tabs->currentIndex();
-    switch(tabsIndex)
-    {
-        case 0:
-            tribe = TRIBE_GAULS;
-            break;
-        case 1:
-            tribe = TRIBE_ROMANS;
-            break;
-        case 2:
-            tribe = TRIBE_TEUTONS;
-            break;
+        QWidget* oldScreen = centralWidget();
+        QLayout* layout = oldScreen->layout();
+        QLayoutItem* tabsItem = layout->itemAt(2);
+        QTabWidget* tabs = (QTabWidget*)tabsItem->widget(); // maybe the thing missing in refreshLoop is casting ?
+        quint8 tabsIndex = tabs->currentIndex();
+        switch(tabsIndex)
+        {
+            case 0:
+                tribe = TRIBE_GAULS;
+                break;
+            case 1:
+                tribe = TRIBE_ROMANS;
+                break;
+            case 2:
+                tribe = TRIBE_TEUTONS;
+                break;
+        }
     }
 
     // QTabWidget 2 layout
 
-    QWidget* screen = new QWidget;
+    QWidget* screen = new QWidget,
+           * qMap = new QWidget;
     QVBoxLayout* vbox = new QVBoxLayout;
+    QHBoxLayout* hbox = new QHBoxLayout;
     QLabel* title = setTitle(tr("Select your starting position")), // could make a macro ^^
           * paratext = new QLabel(tr("Where do you want to start building up your empire ? Use the \"recommended\" area for the most ideal location. Or select the area where your friends are located and team up !"));
     paratext->setWordWrap(true);
     vbox->addWidget(title);
     vbox->addWidget(paratext);
 
-    QLabel* qIcon = new QLabel();
+    //QLabel* qIcon = new QLabel();
+    //QClickableWidget* qIcon = new QClickableWidget;
+    QClickableLabel* qIcon = new QClickableLabel;
 
     QString locationsFolder = "locations/";
     QPixmap map = getQPixmap(locationsFolder + "locations.png"),
@@ -189,8 +199,12 @@ void MyWindow::setChooseLocationGUI()
             east = 218,
             north = 59,
             south = 187,
-            x = west, y = north,
-            bannerWidthDiv2 = banner.width() / 2, bannerHeight = banner.height();
+            x = isWest ? west : east,
+            y = isNorth ? north : south,
+            recommendedX = west,
+            recommendedY = north,
+            bannerWidthDiv2 = banner.width() / 2,
+            bannerHeight = banner.height();
 
     painter->drawPixmap(x, y, banner);
 
@@ -203,15 +217,19 @@ void MyWindow::setChooseLocationGUI()
     drawTextCentered(painter, east + bannerWidthDiv2, south - 5, tr("SOUTH-EAST"));
     drawTextCentered(painter, west + bannerWidthDiv2, south - 5, tr("SOUTH-WEST"));
 
-    drawTextCentered(painter, x + 9, y + bannerHeight + 5,  tr("RECOMMENDED"), true);
+    drawTextCentered(painter, /*x*/recommendedX + 9, /*y*/recommendedY + bannerHeight + 5,  tr("RECOMMENDED"), true);
 
     painter->end();
 
     qIcon->setPixmap(map);
-    qIcon->setAlignment(Qt::AlignCenter);
+    //qIcon->setAlignment(Qt::AlignCenter);
     qIcon->setCursor(Qt::PointingHandCursor);
     //connect(qIcon, SIGNAL(clicked()), this, SLOT(chooseLocation())); // TODO: not that easy - with an icon we can get where the guy clicked it seems
-    vbox->addWidget(qIcon);
+    hbox->addStretch();
+    hbox->addWidget(qIcon);
+    hbox->addStretch();
+    qMap->setLayout(hbox);
+    vbox->addWidget(/*qIcon*/qMap);
 
     QPushButton* confirmButton = new QPushButton(tr("Confirm"));
     vbox->addWidget(confirmButton);

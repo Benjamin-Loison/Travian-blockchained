@@ -22,6 +22,7 @@ QT += widgets network
 HEADERS += \
     CryptoPlus.h \
     MyWindow.h \
+    QClickableLabel.h \
     QClickableWidget.h \
     QFilePlus.h \
     QHoverLabel.h \

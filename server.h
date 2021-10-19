@@ -4,6 +4,8 @@
 #include <QtWidgets>
 #include <QtNetwork>
 
+#define SERVER_PORT 23090
+
 class Server : public QWidget
 {
     Q_OBJECT
