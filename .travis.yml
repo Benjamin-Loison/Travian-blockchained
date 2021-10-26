@@ -4,6 +4,8 @@ compiler: g++
 sudo: required
 
 before_install:
+ - sudo apt update
+ - sudo apt install p7zip
  - wget https://code.qt.io/cgit/qbs/qbs.git/plain/scripts/install-qt.sh
  - chmod +x install-qt.sh
  - ./install-qt.sh --version 6.2.1 qtbase
