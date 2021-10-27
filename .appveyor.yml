@@ -1,16 +1,8 @@
-image: Visual Studio 2019
-configuration:
- - Release
+image: Ubuntu2004
 
-platform:
- - x64
-
-install:
- - set QTDIR=C:\Qt\6.2.0\mingw81_64
- - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
 build_script:
- - qmake
- - mingw32-make
+ - $HOME/Qt/6.1.2/gcc_64/bin/qmake
+ - make
 
 artifacts:
  - path: TravianBlockchained
