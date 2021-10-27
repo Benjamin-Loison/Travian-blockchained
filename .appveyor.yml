@@ -9,8 +9,8 @@ install:
  - set QTDIR=C:\Qt\6.2.0\mingw81_64
  - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
 build_script:
-  - qmake
-  - mingw32-make
+ - qmake
+ - mingw32-make
 
 artifacts:
  - path: TravianBlockchained
