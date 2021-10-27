@@ -1,11 +1,16 @@
-image: Ubuntu2004
+image: Visual Studio 2019
+configuration:
+ - Release
+
+platform:
+ - x64
 
 install:
- - sudo apt install -y libgl-dev
-
+ - set QTDIR=C:\Qt\6.2.0\mingw81_64
+ - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
 build_script:
- - $HOME/Qt/6.1.2/gcc_64/bin/qmake
- - make
+ - qmake
+ - mingw32-make
 
 artifacts:
  - path: TravianBlockchained
