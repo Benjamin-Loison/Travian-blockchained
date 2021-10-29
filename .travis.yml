@@ -1,6 +1,14 @@
-os: windows
 language: cpp
+dist: focal
+compiler: g++
+sudo: required
 
+before_install:
+ - sudo add-apt-repository ppa:rncbc/qt6.2-static-focal -y
+ - sudo apt update
+install:
+ - sudo apt install -y qtbase6-static
 script:
+ - source /opt/qt6.2-static/bin/qt6.2-static-env.sh
  - qmake
  - make
