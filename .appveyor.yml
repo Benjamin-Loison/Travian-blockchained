@@ -3,7 +3,7 @@ install:
   
 build_script:
   - qmake TravianBlockchained.pro
-  - mingw-make
+  - mingw32-make
 
 artifacts:
   - path: release/TravianBlockchained.exe
