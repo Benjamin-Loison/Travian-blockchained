@@ -1,11 +1,11 @@
-image: Ubuntu2004
-
 install:
- - sudo apt install -y libgl-dev
-
+  - set PATH=%PATH%;C:\Qt\6.2.0\mingw81_32\bin;C:\Qt\Tools\mingw810_32\bin
+  - powershell "$file = 'TravianBlockchained.pro'; $content = Get-Content $file; $content[0..($content.length-20)]|Out-File $file -Encoding ascii"
+  
 build_script:
- - $HOME/Qt/6.1.2/gcc_64/bin/qmake
- - make
+  - dir C:\Qt\6.2.0\
+  - qmake TravianBlockchained.pro
+  - mingw32-make
 
 artifacts:
- - path: TravianBlockchained
+  - path: release/TravianBlockchained.exe
