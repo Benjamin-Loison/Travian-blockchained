@@ -4,6 +4,7 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/Benjamin-Loison/Travian-blockchained?branch=master&svg=true)](https://ci.appveyor.com/project/Benjamin-Loison/Travian-blockchained)
 [![Mac](https://github.com/Benjamin-Loison/Travian-blockchained/actions/workflows/cpp.yml/badge.svg)](https://github.com/Benjamin-Loison/Travian-blockchained/actions/workflows/cpp.yml)
 
+
 Travian powered by blockchain technology using proof-of-stake to remove all buy gold stuff
 
 An assumption done in this project is that the majority of users are following the protocol. (if want to avoid "fake majority" (by someone creating a lot of fake virtual users) just have to force one IP per user creation)
