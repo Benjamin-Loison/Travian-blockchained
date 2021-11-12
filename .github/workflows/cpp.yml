@@ -1,0 +1,23 @@
+name: Mac
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v2
+    - run: brew install qt6
+    - run: echo 'export PATH="/usr/local/opt/qt@6/bin:$PATH"' >> /Users/runner/.bash_profile
+    - run: export LDFLAGS="-L/usr/local/opt/qt@6/lib"
+    - run: export CPPFLAGS="-I/usr/local/opt/qt@6/include"
+    - run: export PKG_CONFIG_PATH="/usr/local/opt/qt@6/lib/pkgconfig"
+    - run: /usr/local/opt/qt@6/bin/qmake
+    - run: make
+    - uses: actions/upload-artifact@v2
+      with:
+        name: TravianBlockchained
+        path: TravianBlockchained.app/Contents/MacOS/TravianBlockchained
