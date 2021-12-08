@@ -1,3 +1,7 @@
+image:
+- Visual Studio
+- Ubuntu
+
 install:
   - set PATH=%PATH%;C:\Qt\6.2.1\mingw81_64\bin;C:\Qt\Tools\mingw810_64\bin
   
