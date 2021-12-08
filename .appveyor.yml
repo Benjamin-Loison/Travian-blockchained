@@ -3,14 +3,17 @@ image:
 - Visual Studio 2022
 
 install:
-  #- cmd: echo windows
-  - sh: echo linux
-  #- set PATH=%PATH%;C:\Qt\6.2.1\mingw81_64\bin;C:\Qt\Tools\mingw810_64\bin
+  - sh: sudo add-apt-repository ppa:rncbc/qt6.2-static-focal -y
+  - sh: sudo apt update
+  - sh: sudo apt install -y qtbase6-static
+  - cmd: set PATH=%PATH%;C:\Qt\6.2.1\mingw81_64\bin;C:\Qt\Tools\mingw810_64\bin
   
 build_script:
-  - qmake TravianBlockchained.pro
-  - cmd: mingw32-make
+  - sh: source /opt/qt6.2-static/bin/qt6.2-static-env.sh
+  - sh: qmake
   - sh: make
+  - cmd: qmake TravianBlockchained.pro
+  - cmd: mingw32-make
 
 artifacts:
   - path: release/TravianBlockchained.exe
