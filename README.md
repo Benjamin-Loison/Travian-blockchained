@@ -1,7 +1,7 @@
 # Travian blockchained
 
-[![Travis Build Status](https://travis-ci.com/Benjamin-Loison/Travian-blockchained.svg?branch=master)](https://app.travis-ci.com/Benjamin-Loison/Travian-blockchained)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/Benjamin-Loison/Travian-blockchained?branch=master&svg=true)](https://ci.appveyor.com/project/Benjamin-Loison/Travian-blockchained)
+[![Linux](https://img.shields.io/appveyor/job/build/Benjamin-Loison/Travian-blockchained/Image:%20Ubuntu2004?label=Linux)](https://ci.appveyor.com/project/Benjamin-Loison/travian-blockchained)
+[![Windows](https://img.shields.io/appveyor/job/build/Benjamin-Loison/Travian-blockchained/Image:%20Visual%20Studio%202022?label=Windows)](https://ci.appveyor.com/project/Benjamin-Loison/travian-blockchained)
 [![Mac](https://github.com/Benjamin-Loison/Travian-blockchained/actions/workflows/cpp.yml/badge.svg)](https://github.com/Benjamin-Loison/Travian-blockchained/actions/workflows/cpp.yml)
 
 Travian powered by blockchain technology using proof-of-stake to remove all buy gold stuff
