@@ -1,9 +1,0 @@
-install:
-  - set PATH=%PATH%;C:\Qt\6.2.1\mingw81_64\bin;C:\Qt\Tools\mingw810_64\bin
-  
-build_script:
-  - qmake TravianBlockchained.pro
-  - mingw32-make
-
-artifacts:
-  - path: release/TravianBlockchained.exe
