@@ -3,13 +3,14 @@ image:
 - Visual Studio 2022
 
 install:
-  - cmd: echo windows
+  #- cmd: echo windows
   - sh: echo linux
   #- set PATH=%PATH%;C:\Qt\6.2.1\mingw81_64\bin;C:\Qt\Tools\mingw810_64\bin
   
-#build_script:
-#  - qmake TravianBlockchained.pro
-#  - mingw32-make
+build_script:
+  - qmake TravianBlockchained.pro
+  - cmd: mingw32-make
+  - sh: make
 
 artifacts:
   - path: release/TravianBlockchained.exe
