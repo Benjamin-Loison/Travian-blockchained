@@ -1,13 +1,11 @@
 image:
-- Ubuntu2004
 - Visual Studio 2022
+- Ubuntu2004
 
 install:
   - sh: sudo add-apt-repository ppa:rncbc/qt6.2-static-focal -y
   - sh: sudo apt update
   - sh: sudo apt install -y qtbase6-static
-  - cmd: dir C:\Qt\Tools
-  - cmd: dir C:\Qt
   - cmd: set PATH=%PATH%;C:\Qt\6.2\mingw_64\bin;C:\Qt\Tools\mingw900_64\bin
   
 build_script:
