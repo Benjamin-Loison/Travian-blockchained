@@ -6,7 +6,9 @@ install:
   - sh: sudo add-apt-repository ppa:rncbc/qt6.2-static-focal -y
   - sh: sudo apt update
   - sh: sudo apt install -y qtbase6-static
-  - cmd: set PATH=%PATH%;C:\Qt\6.2\mingw_64\bin;C:\Qt\Tools\mingw_64\bin
+  - cmd: dir C:\Qt\Tools
+  - cmd: dir C:\Qt
+  - cmd: set PATH=%PATH%;C:\Qt\6.2\mingw_64\bin;C:\Qt\Tools\mingw900_64\bin
   
 build_script:
   - sh: source /opt/qt6.2-static/bin/qt6.2-static-env.sh
