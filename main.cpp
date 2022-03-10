@@ -43,6 +43,10 @@ void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun);
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+  
+    #if __APPLE__
+        QDir::setCurrent("../../../");
+    #endif
 
     QString languageFile = "travianblockchained_fr";
     if(translator.load(languageFile))
