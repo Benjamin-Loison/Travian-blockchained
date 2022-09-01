@@ -17,7 +17,7 @@ MyWindow::MyWindow()
     //setFixedSize(200, 100);
 
     setWindowIcon(getQIcon("travian.png"));
-    setWindowTitle("Travian blockchained");
+    setWindowTitle(tr("Travian blockchained"));
     // why no icon when right click on launcher application in Windows taskbar ?
 }
 
