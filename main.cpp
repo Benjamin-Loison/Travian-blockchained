@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
     return res;
 }
 
-// https://stackoverflow.com/a/24966317/7123660
+// https://stackoverflow.com/a/24966317
 /*void htmlGet(const QUrl &url, const std::function<void(const QString&)> &fun)
 {
    QScopedPointer<QNetworkAccessManager> manager(new QNetworkAccessManager);
